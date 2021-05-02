@@ -42,8 +42,16 @@ func _process(delta : float) -> void:
 
 func _draw() -> void:
 	draw_rect(
-		Rect2(
-			-Vector2.ONE * world_size  / 2,
-			Vector2.ONE * world_size
-		), world_border_color, false, 3.0
+		get_world_rect(),
+		world_border_color,
+		false,
+		3.0
 	)
+
+
+
+## Public Methods
+func get_world_rect() -> Rect2:
+	return Rect2(
+			-Vector2.ONE * world_size  / 2,
+			Vector2.ONE * world_size)

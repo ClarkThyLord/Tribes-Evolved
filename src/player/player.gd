@@ -8,6 +8,8 @@ export(float, 0.0, 100.0) var speed := 10.0
 
 export(float, 0.0, 10.0) var speed_boost := 0.75
 
+export var parent_world : NodePath
+
 
 
 ## Built-In Virtual Methods
@@ -26,3 +28,10 @@ func _process(delta : float) -> void:
 		direction += direction * speed_boost
 	
 	translate(direction * speed)
+	var world := get_node_or_null(parent_world)
+	if is_instance_valid(world):
+		var world_rect : Rect2 = world.get_world_rect()
+		position.x = position.x if position.x > world_rect.position.x else world_rect.position.x
+		position.x = position.x if position.x < world_rect.end.x else world_rect.end.x
+		position.y = position.y if position.y > world_rect.position.y else world_rect.position.y
+		position.y = position.y if position.y < world_rect.end.y else world_rect.end.y
