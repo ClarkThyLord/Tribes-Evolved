@@ -5,11 +5,11 @@ extends Area2D
 
 
 ## Exported Variables
-export(float, 0.0, 100.0) var energy := 25.0
+export(float, 0.0, 100.0) var energy := 25.0 setget set_energy
 
-export(float, 16.0, 100.0) var vision := 32.0
+export(float, 16.0, 100.0) var vision := 32.0 setget set_vision
 
-export var variance := Color.white
+export var variance := Color.white setget set_variance
 
 export(int, 5, 64) var potential := 5 setget set_potential
 
@@ -20,7 +20,7 @@ var _hovered := false
 
 var _selected := false
 
-var _image := Image.new()
+var _image : Image = null
 
 
 
@@ -35,8 +35,6 @@ onready var sprite : Sprite = get_node("Sprite")
 
 ## Built-In Virtual Methods
 func _ready() -> void:
-	evolve()
-	
 	if is_instance_valid(collision_shape) \
 			and is_instance_valid(collision_shape.shape):
 		collision_shape.shape = collision_shape.shape.duplicate()
@@ -64,25 +62,55 @@ func _draw() -> void:
 
 
 ## Public Methods
+func set_energy(value : float) -> void:
+	energy = value
+
+
+func set_vision(value : float) -> void:
+	vision = value
+	
+	if is_instance_valid(view_shape) \
+			and is_instance_valid(view_shape.shape):
+		(view_shape.shape as CircleShape2D).radius = vision
+
+
+func set_variance(color : Color) -> void:
+	variance = color
+
+
 func set_potential(value : int) -> void:
-	potential = value
-	# FORCE ODD ?
-#	potential = value + ((value + 1) % 2)
-#	property_list_changed_notify()
+	potential = value + ((value + 1) % 2)
+	property_list_changed_notify()
+	
+	if is_instance_valid(collision_shape) \
+			and is_instance_valid(collision_shape.shape):
+		(collision_shape.shape as RectangleShape2D).extents = Vector2.ONE * potential
+
+
+func birth() -> void:
+	_image = Image.new()
+	_image.create(potential, potential, false, Image.FORMAT_RGB8)
+	evolve()
+
+
+func mutate() -> void:
+	pass
 
 
 func evolve() -> void:
+	if not is_instance_valid(_image):
+		printerr("need to call on entity's birth first!")
+		return
+	
 	var axis = (potential - 1) / 2
-	var color = Color.red
-	_image.create(potential, potential, false, Image.FORMAT_RGB8)
 	
 	_image.lock()
 	for x in range(axis + 1):
 		for y in range(potential):
 			if (randi() % 10) % 2 == 0:
-				_image.set_pixel(x, y, color)
+				_image.set_pixel(x, y, variance)
 				if not x == axis:
-					_image.set_pixel(potential - x - 1, y, color)
+					_image.set_pixel(potential - x - 1, y, variance)
 	_image.unlock()
 	
 	var texture = ImageTexture.new()
@@ -91,7 +119,10 @@ func evolve() -> void:
 
 
 func randomize() -> void:
-	pass
+	self.variance = Color(randi())
+	self.vision = 16 + (16 * variance.b)
+	self.potential = 5 + int(3 * variance.g)
+	birth()
 
 
 

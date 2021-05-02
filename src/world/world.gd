@@ -42,6 +42,7 @@ func _process(delta : float) -> void:
 	var entity := Entity.instance()
 	entity.position = _random_world_position()
 	add_child(entity)
+	entity.randomize()
 
 
 func _draw() -> void:
