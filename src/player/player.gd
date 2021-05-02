@@ -6,9 +6,16 @@ extends Camera2D
 ## Exported Variables
 export(float, 0.0, 100.0) var speed := 10.0
 
+export(float, 0.0, 100.0) var speed_pan := 30.0
+
 export(float, 0.0, 10.0) var speed_boost := 0.75
 
 export var parent_world : NodePath
+
+
+
+## Private Variables
+var _dragging := false
 
 
 
@@ -39,11 +46,17 @@ func _process(delta : float) -> void:
 
 func _input(event : InputEvent) -> void:
 	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_WHEEL_UP:
-			if zoom.x > 0.1:
-				self.zoom += -Vector2.ONE * 0.1
-				get_tree().set_input_as_handled()
-		if event.button_index == BUTTON_WHEEL_DOWN:
-			if zoom.x < 3:
-				self.zoom += Vector2.ONE * 0.1
-				get_tree().set_input_as_handled()
+			match event.button_index:
+				BUTTON_LEFT:
+					_dragging = event.pressed
+				BUTTON_WHEEL_UP:
+					if zoom.x > 0.1:
+						self.zoom += -Vector2.ONE * 0.1
+						get_tree().set_input_as_handled()
+				BUTTON_WHEEL_DOWN:
+					if zoom.x < 3:
+						self.zoom += Vector2.ONE * 0.1
+						get_tree().set_input_as_handled()
+	elif event is InputEventMouseMotion:
+		if _dragging:
+			translate(-event.relative.normalized() * speed_pan * zoom)
