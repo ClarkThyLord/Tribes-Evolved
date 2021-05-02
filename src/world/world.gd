@@ -6,6 +6,8 @@ extends Node2D
 ## Refrences
 const Food := preload("res://src/food/food.tscn")
 
+const Entity := preload("res://src/entity/entity.tscn")
+
 
 
 ## Exported Variables
@@ -26,18 +28,20 @@ var _foods := []
 
 ## Built-In Virtual Methods
 func _ready() -> void:
+	randomize()
 	update()
 
 
 func _process(delta : float) -> void:
 	if randf() < food_rate:
 		var food := Food.instance()
-		food.position = Vector2(
-			randi() % world_size.x as int,
-			randi() % world_size.y as int
-		) - (Vector2.ONE * world_size / 2)
+		food.position = _random_world_position()
 		food.randomize()
 		add_child(food)
+	
+	var entity := Entity.instance()
+	entity.position = _random_world_position()
+	add_child(entity)
 
 
 func _draw() -> void:
@@ -55,3 +59,12 @@ func get_world_rect() -> Rect2:
 	return Rect2(
 			-Vector2.ONE * world_size  / 2,
 			Vector2.ONE * world_size)
+
+
+
+## Private Methods
+func _random_world_position() -> Vector2:
+	return Vector2(
+		randi() % world_size.x as int,
+		randi() % world_size.y as int
+	) - (Vector2.ONE * world_size / 2)
