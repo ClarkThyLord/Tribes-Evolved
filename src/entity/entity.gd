@@ -95,6 +95,16 @@ func _draw() -> void:
 				variance,
 				2
 			)
+		
+		draw_arc(
+			Vector2.ZERO,
+			vision,
+			0,
+			deg2rad(360),
+			16,
+			variance,
+			2
+		)
 
 
 
