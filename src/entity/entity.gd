@@ -72,13 +72,14 @@ func _process(delta : float) -> void:
 		translate(position.direction_to(_target) * speed * delta)
 	else:
 		_target = Vector2.INF
+	update()
 
 
 func _draw() -> void:
 	if _hovered or _selected:
 		var color : Color
 		if _hovered:
-			color = Color(1, 1, 1, 0.1)
+			color = Color(1, 1, 1, 0.2)
 		if _selected:
 			color = Color.white
 		
@@ -86,6 +87,14 @@ func _draw() -> void:
 			Vector2.ZERO,
 			16, 0, 360, 16, color, 2
 		)
+		
+		if not _target == Vector2.INF:
+			draw_line(
+				to_local(position),
+				to_local(_target),
+				variance,
+				2
+			)
 
 
 
@@ -162,16 +171,13 @@ func randomize() -> void:
 ## Private Methods
 func _on_mouse_entered():
 	_hovered = true
-	update()
 
 
 func _on_mouse_exited():
 	_hovered = false
-	update()
 
 
 func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and not event.pressed:
 			_selected = not _selected
-			update()
