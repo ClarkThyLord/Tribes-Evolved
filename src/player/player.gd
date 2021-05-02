@@ -35,3 +35,15 @@ func _process(delta : float) -> void:
 		position.x = position.x if position.x < world_rect.end.x else world_rect.end.x
 		position.y = position.y if position.y > world_rect.position.y else world_rect.position.y
 		position.y = position.y if position.y < world_rect.end.y else world_rect.end.y
+
+
+func _input(event : InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_WHEEL_UP:
+			if zoom.x > 0.1:
+				self.zoom += -Vector2.ONE * 0.1
+				get_tree().set_input_as_handled()
+		if event.button_index == BUTTON_WHEEL_DOWN:
+			if zoom.x < 3:
+				self.zoom += Vector2.ONE * 0.1
+				get_tree().set_input_as_handled()
