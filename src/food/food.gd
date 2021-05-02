@@ -54,6 +54,10 @@ func randomize() -> void:
 	update()
 
 
+func consumed(by) -> void:
+	queue_free()
+
+
 
 ## Private Methods
 func _get_pixel_size() -> float:

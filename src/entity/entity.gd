@@ -179,15 +179,20 @@ func randomize() -> void:
 
 
 ## Private Methods
-func _on_mouse_entered():
+func _on_mouse_entered() -> void:
 	_hovered = true
 
 
-func _on_mouse_exited():
+func _on_mouse_exited() -> void:
 	_hovered = false
 
 
-func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int):
+func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and not event.pressed:
 			_selected = not _selected
+
+
+func _on_area_entered(area : Area2D) -> void:
+	if area.is_in_group("foods"):
+		area.consumed(self)
