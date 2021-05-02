@@ -57,4 +57,4 @@ func randomize() -> void:
 
 ## Private Methods
 func _get_pixel_size() -> float:
-	return 2.0 + ((nutrition / 100.0) * 6.0)
+	return 2.0 + ((nutrition / 100.0) * 3.0)

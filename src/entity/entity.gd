@@ -115,7 +115,7 @@ func evolve() -> void:
 	
 	var texture = ImageTexture.new()
 	texture.create_from_image(_image, 0)
-	sprite.texture = texture
+	get_node("Sprite").texture = texture
 
 
 func randomize() -> void:
