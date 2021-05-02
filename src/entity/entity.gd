@@ -7,7 +7,7 @@ extends Area2D
 ## Exported Variables
 export(float, 0.0, 100.0) var energy := 25.0 setget set_energy
 
-export(float, 0.0, 100.0) var speed := 1.0 setget set_speed
+export(float, 0.0, 100.0) var speed := 22.0 setget set_speed
 
 export(float, 16.0, 100.0) var vision := 32.0 setget set_vision
 
@@ -57,8 +57,7 @@ func _ready() -> void:
 func _process(delta : float) -> void:
 	var world = get_node_or_null(parent_world)
 	if is_instance_valid(world) \
-			and is_instance_valid(view) \
-			and _target == Vector2.INF:
+			and is_instance_valid(view):
 		var areas := view.get_overlapping_areas()
 		for area in areas:
 			area = area as Area2D
@@ -70,7 +69,7 @@ func _process(delta : float) -> void:
 	
 	var distance := position.distance_to(_target)
 	if distance > 8:
-		translate(position.direction_to(_target) * speed)
+		translate(position.direction_to(_target) * speed * delta)
 	else:
 		_target = Vector2.INF
 
@@ -153,6 +152,7 @@ func evolve() -> void:
 
 func randomize() -> void:
 	self.variance = Color(randi())
+	self.speed = 14 + (16 * variance.r)
 	self.vision = 16 + (16 * variance.b)
 	self.potential = 5 + int(3 * variance.g)
 	birth()
