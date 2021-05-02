@@ -20,6 +20,8 @@ export var parent_world : NodePath
 ## Private Variables
 var _ancestor = null
 
+var _children := []
+
 
 
 ## Built-In Virtual Methods
@@ -30,10 +32,16 @@ func _ready() -> void:
 
 func _process(delta : float) -> void:
 	var world = get_node_or_null(parent_world)
-	if is_instance_valid(world) and randf() < children_rate:
+	if is_instance_valid(world) \
+			and randf() < children_rate \
+			and _children.size() < children_max:
 		var entity = _ancestor.duplicate()
-		entity.position = position + Vector2(
-			32 + randi() % 100 * (1 if randf() > 0.5 else -1),
-			32 + randi() % 100 * (1 if randf() > 0.5 else -1)
-		)
+		while true:
+			entity.position = position + Vector2(
+				32 + randi() % 100 * (1 if randf() > 0.5 else -1),
+				32 + randi() % 100 * (1 if randf() > 0.5 else -1)
+			)
+			if world.is_world_point(entity.position):
+				break
 		world.add_child(entity)
+		_children.append(entity)
