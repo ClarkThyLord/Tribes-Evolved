@@ -43,5 +43,6 @@ func _process(delta : float) -> void:
 			)
 			if world.is_world_point(entity.position):
 				break
+		entity.parent_world = parent_world
 		world.add_child(entity)
 		_children.append(entity)

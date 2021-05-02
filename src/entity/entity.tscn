@@ -11,7 +11,9 @@ extents = Vector2( 5, 5 )
 [sub_resource type="CircleShape2D" id=3]
 radius = 32.0
 
-[node name="Entity" type="Area2D"]
+[node name="Entity" type="Area2D" groups=[
+"entities",
+]]
 material = SubResource( 1 )
 script = ExtResource( 1 )
 
