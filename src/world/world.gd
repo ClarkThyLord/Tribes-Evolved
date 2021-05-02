@@ -6,7 +6,7 @@ extends Node2D
 ## Refrences
 const Food := preload("res://src/food/food.tscn")
 
-const Entity := preload("res://src/entity/entity.tscn")
+const Spawn := preload("res://src/spawn/spawn.tscn")
 
 
 
@@ -14,6 +14,8 @@ const Entity := preload("res://src/entity/entity.tscn")
 export(int, 0, 1000) var food_max := 100
 
 export(float, 0.0, 1.0) var food_rate := 0.3
+
+export(int, 0, 100) var spawns_max := 10
 
 export var world_size := Vector2(800, 800)
 
@@ -23,6 +25,8 @@ export var world_border_color := Color.white
 
 ## Private Variables
 var _foods := []
+
+var _spawns := []
 
 
 
@@ -39,10 +43,12 @@ func _process(delta : float) -> void:
 		food.randomize()
 		add_child(food)
 	
-	var entity := Entity.instance()
-	entity.position = _random_world_position()
-	add_child(entity)
-	entity.randomize()
+	if _spawns.size() < spawns_max:
+		var spawn = Spawn.instance()
+		spawn.parent_world = get_path()
+		spawn.position = _random_world_position()
+		add_child(spawn)
+		_spawns.append(spawn)
 
 
 func _draw() -> void:
