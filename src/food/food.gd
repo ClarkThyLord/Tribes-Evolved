@@ -4,6 +4,11 @@ extends Area2D
 
 
 
+## Signals
+signal eaten(food)
+
+
+
 ## Exported Variables
 export(float, 1.0, 100.0) var nutrition := 0.0 setget set_nutrition
 
@@ -54,8 +59,10 @@ func randomize() -> void:
 	update()
 
 
-func consumed(by) -> void:
-	queue_free()
+func consumed(consumer) -> void:
+	consumer.eat(self)
+	get_parent().remove_child(self)
+	emit_signal("eaten", self)
 
 
 

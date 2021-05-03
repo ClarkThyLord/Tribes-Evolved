@@ -11,46 +11,55 @@ const Spawn := preload("res://src/spawn/spawn.tscn")
 
 
 ## Exported Variables
-export(int, 0, 1000) var food_max := 100
-
 export(float, 0.0, 1.0) var food_rate := 0.3
 
-export(int, 0, 100) var spawns_max := 10
+export(int, 0, 1000) var food_max := 300
+
+export(float, 0.0, 1.0) var spawn_rate = 0.6
+
+export(int, 0, 100) var spawn_max := 10
 
 export var world_size := Vector2(800, 800)
 
-export(int, 0, 25) var world_border_margin := 10
+export(int, 0, 100) var world_border_margin := 10
 
 export var world_border_color := Color.white
 
 
 
 ## Private Variables
-var _foods := []
-
-var _spawns := []
+var _food_pool := []
 
 
 
 ## Built-In Virtual Methods
 func _ready() -> void:
 	randomize()
+	
+	for f in range(food_max):
+		_food_pool.append(Food.instance())
+		_food_pool[-1].connect("eaten", self, "_on_Food_eaten")
+	
 	update()
 
 
+func _exit_tree() -> void:
+	for food in _food_pool:
+		food.queue_free()
+
+
 func _process(delta : float) -> void:
-	if randf() < food_rate:
-		var food := Food.instance()
+	for f in range(int(_food_pool.size() * (randf() * food_rate))):
+		var food : Node2D = _food_pool.pop_front()
 		food.position = random_world_point()
 		food.randomize()
 		add_child(food)
 	
-	if _spawns.size() < spawns_max:
+	if randf() < spawn_rate and get_tree().get_nodes_in_group("spawns").size() < spawn_max:
 		var spawn = Spawn.instance()
 		spawn.parent_world = get_path()
 		spawn.position = random_world_point()
 		add_child(spawn)
-		_spawns.append(spawn)
 
 
 func _draw() -> void:
@@ -79,3 +88,9 @@ func random_world_point() -> Vector2:
 
 func is_world_point(point : Vector2) -> bool:
 	return get_world_rect().has_point(point)
+
+
+
+## Private Methods
+func _on_Food_eaten(food) -> void:
+	_food_pool.append(food)

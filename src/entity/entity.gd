@@ -138,6 +138,14 @@ func set_potential(value : int) -> void:
 		(collision_shape.shape as RectangleShape2D).extents = Vector2.ONE * potential
 
 
+func randomize() -> void:
+	self.variance = Color(randi())
+	self.speed = 14 + (16 * variance.r)
+	self.vision = 16 + (16 * variance.b)
+	self.potential = 5 + int(3 * variance.g)
+	birth()
+
+
 func birth() -> void:
 	_image = Image.new()
 	_image.create(potential, potential, false, Image.FORMAT_RGB8)
@@ -169,13 +177,8 @@ func evolve() -> void:
 	get_node("Sprite").texture = texture
 
 
-func randomize() -> void:
-	self.variance = Color(randi())
-	self.speed = 14 + (16 * variance.r)
-	self.vision = 16 + (16 * variance.b)
-	self.potential = 5 + int(3 * variance.g)
-	birth()
-
+func eat(food) -> void:
+	pass
 
 
 ## Private Methods
