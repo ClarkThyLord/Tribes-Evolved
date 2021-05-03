@@ -17,6 +17,8 @@ export var parent_world : NodePath
 ## Private Variables
 var _dragging := false
 
+var _selected := []
+
 
 
 ## Built-In Virtual Methods
@@ -60,3 +62,18 @@ func _input(event : InputEvent) -> void:
 	elif event is InputEventMouseMotion:
 		if _dragging:
 			translate(-event.relative.normalized() * speed_pan * zoom)
+			get_tree().set_input_as_handled()
+
+
+
+## Public Methods
+func select(entity) -> void:
+	_selected.append(entity)
+
+
+func unselect(entity) -> void:
+	_selected.erase(entity)
+
+
+func unselect_all() -> void:
+	_selected.clear()

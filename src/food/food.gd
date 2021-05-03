@@ -54,13 +54,16 @@ func set_nutrition_type(color : Color) -> void:
 
 
 func randomize() -> void:
-	nutrition = randi() % 101
+	nutrition = 1 + randi() % 100
 	nutrition_type = Color(randi())
 	update()
 
 
-func consumed(consumer) -> void:
-	consumer.eat(self)
+func eaten(eater) -> void:
+	var dominant_color := 0 if eater.variance[0] > eater.variance[1] else 1
+	dominant_color = dominant_color if eater.variance[dominant_color] > eater.variance[2] else 2
+	eater.eat(nutrition * nutrition_type[dominant_color])
+	
 	get_parent().remove_child(self)
 	emit_signal("eaten", self)
 

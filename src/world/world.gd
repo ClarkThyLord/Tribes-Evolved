@@ -73,6 +73,10 @@ func _draw() -> void:
 
 
 ## Public Methods
+func get_player():
+	return get_node_or_null("Player")
+
+
 func get_world_rect() -> Rect2:
 	return Rect2(
 			(-Vector2.ONE * world_size / 2) + Vector2.ONE * world_border_margin,
