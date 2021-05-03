@@ -47,6 +47,9 @@ func _process(delta : float) -> void:
 
 
 func _input(event : InputEvent) -> void:
+	if Engine.editor_hint:
+		return
+	
 	if event is InputEventMouseButton:
 			match event.button_index:
 				BUTTON_LEFT:

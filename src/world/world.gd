@@ -49,6 +49,9 @@ func _exit_tree() -> void:
 
 
 func _process(delta : float) -> void:
+	if Engine.editor_hint:
+		return
+	
 	for f in range(int(_food_pool.size() * (randf() * food_rate))):
 		var food : Node2D = _food_pool.pop_front()
 		food.position = random_world_point()

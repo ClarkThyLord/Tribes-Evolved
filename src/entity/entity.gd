@@ -69,6 +69,9 @@ func _ready() -> void:
 
 
 func _process(delta : float) -> void:
+	if Engine.editor_hint:
+		return
+	
 	var world = get_node_or_null(parent_world)
 	if is_instance_valid(world) \
 			and is_instance_valid(view):
