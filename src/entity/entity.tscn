@@ -12,6 +12,7 @@ extents = Vector2( 5, 5 )
 radius = 32.0
 
 [node name="Entity" type="Area2D" groups=[
+"consumables",
 "entities",
 ]]
 material = SubResource( 1 )
