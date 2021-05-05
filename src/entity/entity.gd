@@ -5,7 +5,7 @@ extends Area2D
 
 
 ## Signals
-signal eaten(entity)
+signal died(entity)
 
 
 
@@ -73,26 +73,23 @@ func _process(delta : float) -> void:
 	if is_instance_valid(_world) \
 			and is_instance_valid(view):
 		var areas := view.get_overlapping_areas()
-		var best_target = [-INF, Vector2.INF]
+		var best_target = [-INF, INF, Vector2.INF]
 		
 		for area in areas:
 			area = area as Area2D
 			
-			var points := -INF
 			var distance := position.distance_to(area.position)
 			
 			if area.is_in_group("foods"):
-				points = area.energy
-				if points > best_target[0]:
-					best_target[0] = points
-					best_target[1] = area.position
+				if area.energy > best_target[0] and distance <= best_target[1]:
+					best_target[0] = area.energy
+					best_target[2] = area.position
 			elif area.is_in_group("entities"):
-				points = area.energy
-				if points < energy:
-					best_target[0] = points
-					best_target[1] = area.position
+				if area.energy < energy and distance <= best_target[1]:
+					best_target[0] = area.energy
+					best_target[2] = area.position
 		
-		_target = best_target[1]
+		_target = best_target[2]
 	
 	if _target == Vector2.INF:
 		_target = position + Vector2(
@@ -100,7 +97,7 @@ func _process(delta : float) -> void:
 			(randi() % int(vision * 2)) - vision)
 	
 	var distance := position.distance_to(_target)
-	if distance > 8:
+	if distance > 4:
 		translate(position.direction_to(_target) * speed * delta)
 	else:
 		_target = Vector2.INF
@@ -243,10 +240,13 @@ func eat(consumable) -> void:
 
 
 func eaten(by) -> float:
-	queue_free()
-	emit_signal("eaten", self)
-	
+	die()
 	return energy * color[by.get_dominant_color()]
+
+
+func die() -> void:
+	queue_free()
+	emit_signal("died", self)
 
 
 
@@ -271,4 +271,5 @@ func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> vo
 
 func _on_area_entered(area : Area2D) -> void:
 	if area.is_in_group("consumables"):
-		eat(area)
+		if area.is_in_group("foods") or area.energy < energy:
+			eat(area)
