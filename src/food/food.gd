@@ -10,9 +10,10 @@ signal eaten(food)
 
 
 ## Exported Variables
-export(float, 1.0, 100.0) var nutrition := 0.0 setget set_nutrition
+export var color := Color.white setget set_color
 
-export var nutrition_type := Color.white setget set_nutrition_type
+export(float, 1.0, 100.0) var energy := 0.0 setget set_energy
+
 
 
 
@@ -34,7 +35,7 @@ func _draw() -> void:
 	draw_circle(
 		Vector2.ZERO,
 		_get_pixel_size(),
-		nutrition_type
+		color
 	)
 	if is_instance_valid(collision_shape) \
 			and is_instance_valid(collision_shape.shape):
@@ -43,32 +44,29 @@ func _draw() -> void:
 
 
 ## Public Methods
-func set_nutrition(value : float) -> void:
-	nutrition = value
+func set_energy(value : float) -> void:
+	energy = value
 	update()
 
 
-func set_nutrition_type(color : Color) -> void:
-	nutrition_type = color
+func set_color(value : Color) -> void:
+	color = value
 	update()
 
 
 func randomize() -> void:
-	nutrition = 1 + randi() % 100
-	nutrition_type = Color(randi())
-	update()
+	energy = 1 + randi() % 100
+	color = Color(randi())
 
 
-func eaten(eater) -> void:
-	var dominant_color := 0 if eater.variance[0] > eater.variance[1] else 1
-	dominant_color = dominant_color if eater.variance[dominant_color] > eater.variance[2] else 2
-	eater.eat(nutrition * nutrition_type[dominant_color])
-	
+func eaten(by) -> float:
 	get_parent().remove_child(self)
 	emit_signal("eaten", self)
+	
+	return energy * color[by.get_dominant_color()]
 
 
 
 ## Private Methods
 func _get_pixel_size() -> float:
-	return 2.0 + ((nutrition / 100.0) * 3.0)
+	return 2.0 + ((energy / 100.0) * 3.0)
