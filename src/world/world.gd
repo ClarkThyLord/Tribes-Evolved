@@ -21,7 +21,7 @@ export(int, 0, 100) var spawn_max := 10
 
 export var world_size := Vector2(800, 800)
 
-export(int, 0, 100) var world_border_margin := 10
+export(int, 0, 255) var world_border_margin := 100
 
 export var world_border_color := Color.white
 
@@ -45,7 +45,7 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	for food in _food_pool:
-		food.queue_free()
+		food.free()
 
 
 func _process(delta : float) -> void:
@@ -60,7 +60,7 @@ func _process(delta : float) -> void:
 	
 	if randf() < spawn_rate and get_tree().get_nodes_in_group("spawns").size() < spawn_max:
 		var spawn = Spawn.instance()
-		spawn.parent_world = get_path()
+		spawn.world = get_path()
 		spawn.position = random_world_point()
 		add_child(spawn)
 
@@ -82,15 +82,14 @@ func get_player():
 
 func get_world_rect() -> Rect2:
 	return Rect2(
-			(-Vector2.ONE * world_size / 2) + Vector2.ONE * world_border_margin,
-			(Vector2.ONE * world_size) - Vector2.ONE * world_border_margin)
+			(-world_size / 2) + (Vector2.ONE * world_border_margin),
+			world_size - (Vector2.ONE * world_border_margin))
 
 
 func random_world_point() -> Vector2:
-	return Vector2.ONE * world_border_margin + Vector2(
-		randi() % (world_size.x - world_border_margin) as int,
-		randi() % (world_size.y - world_border_margin) as int
-	) - (Vector2.ONE * world_size / 2)
+	return ((Vector2.ONE * world_border_margin) + Vector2(
+			randi() % int(world_size.x - world_border_margin),
+			randi() % int(world_size.y - world_border_margin))) - (world_size / 2)
 
 
 func is_world_point(point : Vector2) -> bool:
