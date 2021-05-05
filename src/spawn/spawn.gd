@@ -9,11 +9,11 @@ const Entity := preload("res://src/entity/entity.tscn")
 
 
 ## Exported Variables
-export(float, 0.0, 1.0) var spawn_rate := 0.1
+export(float, 0.1, 1.0) var spawn_rate := 0.1
 
 export(int, 0, 250) var spawn_radius := 50
 
-export(int, 1, 256) var population_minimum := 64
+export(int, 1, 250) var population_minimum := 64
 
 export(float, 0.0, 1.0) var mutation_rate := 0.01
 
@@ -32,6 +32,8 @@ var _population := []
 
 var _evolution_points := 0
 
+var _evolution_level := 500
+
 var _selected := false
 
 var _draw_time := 0
@@ -48,9 +50,7 @@ func _ready() -> void:
 		return
 	
 	if _lineage.empty():
-		var ancestor := Entity.instance()
-		ancestor.randomize()
-		_lineage.append(ancestor)
+		_add_ancestor()
 	
 	_draw_points = 3 + (randi() % 33)
 
@@ -88,6 +88,14 @@ func _draw() -> void:
 
 
 ## Public Methods
+func randomize() -> void:
+	self.spawn_rate = 0.1 + clamp(randf() - 0.5, 0.0, 1.0) 
+	self.spawn_radius = 64 + (randi() % 128)
+	self.population_minimum = 10 + (randi() % 40)
+	self.mutation_rate = 0.01 + clamp(randf() - 0.96, 0.0, 1.0) 
+	self.evolution_rate = 0.4 + clamp(randf() - 0.4, 0.0, 1.0)
+
+
 func set_world(node_path : NodePath) -> void:
 	world = node_path
 	if not world.is_empty():
@@ -97,15 +105,39 @@ func set_world(node_path : NodePath) -> void:
 func spawn(spawn_point : Vector2, parent_a = null, parent_b = null):
 	if is_instance_valid(_world) \
 			and not _lineage.empty():
+		
+		if (randf() < mutation_rate or _evolution_points >= _evolution_level) \
+				and is_instance_valid(parent_a) \
+				and is_instance_valid(parent_b):
+			evolve(parent_a, parent_b)
+		
 		var entity = _lineage.back().duplicate()
 		entity.position = spawn_point
 		entity.world = world
-		_world.add_child(entity)
+		
+		_evolution_points += entity.energy
+		
 		_population.append(entity)
+		_world.add_child(entity)
+
+
+func evolve(parent_a, parent_b) -> void:
+	_lineage.append([
+		parent_a.duplicate(),
+		parent_b.duplicate()])
+	_add_ancestor(parent_a, parent_b)
+	_evolution_points = 0
+	_evolution_level += _evolution_level * evolution_rate
 
 
 
 ## Private Methods
+func _add_ancestor(parent_a = null, parent_b = null) -> void:
+	var ancestor := Entity.instance()
+	ancestor.randomize(parent_a, parent_b)
+	_lineage.append(ancestor)
+
+
 func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int):
 	if event is InputEventMouseButton:
 		match event.button_index:
