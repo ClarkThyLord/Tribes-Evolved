@@ -181,7 +181,7 @@ func randomize(parent_a = null, parent_b = null) -> void:
 
 func set_world(node_path : NodePath) -> void:
 	world = node_path
-	if not world.is_empty():
+	if is_inside_tree() and not world.is_empty():
 		_world = get_node_or_null(world)
 
 
