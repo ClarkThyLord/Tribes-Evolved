@@ -49,10 +49,12 @@ func _ready() -> void:
 	if Engine.editor_hint:
 		return
 	
+	self.world = world
+	
 	if _lineage.empty():
 		_add_ancestor()
 	
-	_draw_points = 3 + (randi() % 33)
+	_draw_points = 6 + (randi() % 18)
 
 
 func _exit_tree() -> void:
@@ -124,6 +126,7 @@ func spawn(spawn_point : Vector2, parent_a = null, parent_b = null):
 		var entity = _lineage.back().duplicate()
 		entity.position = spawn_point
 		entity.world = world
+		entity.connect("eaten", self, "_on_Entity_eaten")
 		
 		_evolution_points += entity.energy
 		
@@ -148,9 +151,13 @@ func _add_ancestor(parent_a = null, parent_b = null) -> void:
 	_lineage.append(ancestor)
 
 
-func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int):
+func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> void:
 	if event is InputEventMouseButton:
 		match event.button_index:
 			BUTTON_LEFT:
 				if event.doubleclick:
 					_selected = !_selected
+
+
+func _on_Entity_eaten(entity) -> void:
+	_population.erase(entity)
