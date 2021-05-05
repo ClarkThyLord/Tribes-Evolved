@@ -55,6 +55,16 @@ func _ready() -> void:
 	_draw_points = 3 + (randi() % 33)
 
 
+func _exit_tree() -> void:
+	for ancestor in _lineage:
+		match typeof(ancestor):
+			TYPE_OBJECT:
+				ancestor.queue_free()
+			TYPE_ARRAY:
+				for parent_ancestor in ancestor:
+					parent_ancestor.queue_free()
+
+
 func _process(delta : float) -> void:
 	if Engine.editor_hint:
 		return
