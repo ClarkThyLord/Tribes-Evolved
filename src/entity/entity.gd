@@ -154,7 +154,7 @@ func randomize(parent_a = null, parent_b = null) -> void:
 		pass
 	else:
 		self.color = Color(randi())
-		self.energy = 25 + (100 * (1 - color.gray()))
+		self.energy = 25 + (100 * (1 - color.v))
 		self.speed = 14 + (16 * color.r)
 		self.vision = 30 + (16 * color.b)
 		self.potential = 5 + int(3 * color.g)
