@@ -1,3 +1,4 @@
+tool
 extends Node2D
 ## World
 
@@ -19,11 +20,11 @@ export(float, 0.0, 1.0) var spawn_rate = 0.6
 
 export(int, 0, 100) var spawn_max := 10
 
-export var world_size := Vector2(800, 800)
+export var world_size := Vector2(800, 800) setget set_world_size
 
-export(int, 0, 255) var world_border_margin := 35
+export var world_margin := Vector2(35, 35) setget set_world_margin
 
-export var world_border_color := Color.white
+export var world_border_color := Color.white setget set_world_border_color
 
 
 
@@ -66,17 +67,18 @@ func _process(delta : float) -> void:
 
 
 func _draw() -> void:
+	if Engine.editor_hint:
+		var border = get_world_border_rect()
+		draw_rect(
+			border,
+			Color.red,
+			false,
+			3.0
+		)
+	
 	draw_rect(
 		get_world_rect(),
 		world_border_color,
-		false,
-		3.0
-	)
-	
-	var border = get_world_border_rect()
-	draw_rect(
-		border,
-		Color.red,
 		false,
 		3.0
 	)
@@ -84,6 +86,21 @@ func _draw() -> void:
 
 
 ## Public Methods
+func set_world_size(value : Vector2) -> void:
+	world_size = value
+	update()
+
+
+func set_world_margin(value : Vector2) -> void:
+	world_margin = value
+	update()
+
+
+func set_world_border_color(value : Color) -> void:
+	world_border_color = value
+	update()
+
+
 func get_player():
 	return get_node_or_null("Player")
 
@@ -94,14 +111,14 @@ func get_world_rect() -> Rect2:
 
 func get_world_border_rect() -> Rect2:
 	return Rect2(
-			(-world_size / 2) + (Vector2.ONE * world_border_margin),
-			world_size - (Vector2.ONE * world_border_margin * 2))
+			(-world_size / 2) + world_margin,
+			world_size - (world_margin * 2))
 
 
-func random_world_point() -> Vector2:
-	return ((Vector2.ONE * world_border_margin) + Vector2(
-			randi() % int(world_size.x - (world_border_margin * 2)),
-			randi() % int(world_size.y - (world_border_margin * 2)))) - (world_size / 2)
+func random_world_point(margin := world_margin) -> Vector2:
+	return (margin + Vector2(
+			randi() % int(world_size.x - (margin.x * 2)),
+			randi() % int(world_size.y - (margin.y * 2)))) - (world_size / 2)
 
 
 func is_world_point(point : Vector2) -> bool:
