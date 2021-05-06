@@ -21,7 +21,7 @@ export(int, 0, 100) var spawn_max := 10
 
 export var world_size := Vector2(800, 800)
 
-export(int, 0, 255) var world_border_margin := 100
+export(int, 0, 255) var world_border_margin := 35
 
 export var world_border_color := Color.white
 
@@ -72,6 +72,14 @@ func _draw() -> void:
 		false,
 		3.0
 	)
+	
+	var border = get_world_border_rect()
+	draw_rect(
+		border,
+		Color.red,
+		false,
+		3.0
+	)
 
 
 
@@ -81,15 +89,19 @@ func get_player():
 
 
 func get_world_rect() -> Rect2:
+	return Rect2(-world_size / 2, world_size)
+
+
+func get_world_border_rect() -> Rect2:
 	return Rect2(
 			(-world_size / 2) + (Vector2.ONE * world_border_margin),
-			world_size - (Vector2.ONE * world_border_margin))
+			world_size - (Vector2.ONE * world_border_margin * 2))
 
 
 func random_world_point() -> Vector2:
 	return ((Vector2.ONE * world_border_margin) + Vector2(
-			randi() % int(world_size.x - world_border_margin),
-			randi() % int(world_size.y - world_border_margin))) - (world_size / 2)
+			randi() % int(world_size.x - (world_border_margin * 2)),
+			randi() % int(world_size.y - (world_border_margin * 2)))) - (world_size / 2)
 
 
 func is_world_point(point : Vector2) -> bool:
