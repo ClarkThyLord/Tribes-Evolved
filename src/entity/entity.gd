@@ -70,37 +70,43 @@ func _process(delta : float) -> void:
 	if Engine.editor_hint:
 		return
 	
-	if is_instance_valid(_world) \
-			and is_instance_valid(view):
-		var areas := view.get_overlapping_areas()
-		var best_target = [-INF, INF, Vector2.INF]
-		
-		for area in areas:
-			area = area as Area2D
+	if is_instance_valid(_world):
+		if is_instance_valid(view):
+			var areas := view.get_overlapping_areas()
+			var best_target = [-INF, INF, Vector2.INF]
 			
-			var distance := position.distance_to(area.position)
+			for area in areas:
+				area = area as Area2D
+				
+				var distance := position.distance_to(area.position)
+				
+				if area.is_in_group("foods"):
+					if area.energy > best_target[0] and distance <= best_target[1]:
+						best_target[0] = area.energy
+						best_target[2] = area.position
+				elif area.is_in_group("entities"):
+					if area.energy < energy and distance <= best_target[1] \
+						and area.is_in_group("entities") and fondness(area) < 0.0:
+						best_target[0] = area.energy
+						best_target[2] = area.position
 			
-			if area.is_in_group("foods"):
-				if area.energy > best_target[0] and distance <= best_target[1]:
-					best_target[0] = area.energy
-					best_target[2] = area.position
-			elif area.is_in_group("entities"):
-				if area.energy < energy and distance <= best_target[1]:
-					best_target[0] = area.energy
-					best_target[2] = area.position
+			if not best_target[2] == Vector2.INF:
+				_target = best_target[2]
 		
-		_target = best_target[2]
-	
-	if _target == Vector2.INF:
-		_target = position + Vector2(
-			(randi() % int(vision * 2)) - vision,
-			(randi() % int(vision * 2)) - vision)
-	
-	var distance := position.distance_to(_target)
-	if distance > 4:
-		translate(position.direction_to(_target) * speed * delta)
-	else:
-		_target = Vector2.INF
+		if _target == Vector2.INF:
+			var radius = vision * 2.5
+			while true:
+				_target = position + Vector2(
+						(randi() % int(radius * 2)) - radius,
+						(randi() % int(radius * 2)) - radius)
+				if _world.is_world_point(_target):
+					break
+		
+		var distance := position.distance_to(_target)
+		if distance > 4:
+			translate(position.direction_to(_target) * speed * delta)
+		else:
+			_target = Vector2.INF
 	update()
 
 
@@ -235,6 +241,14 @@ func unselect() -> void:
 		_world.get_player().unselect(self)
 
 
+func fondness(entity) -> float:
+	var value = 0.0
+	
+	value = get_dominant_color() - entity.get_dominant_color() 
+	
+	return clamp(value, -1.0, 1.0)
+
+
 func eat(consumable) -> void:
 	self.energy += consumable.eaten(self)
 
@@ -271,5 +285,6 @@ func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> vo
 
 func _on_area_entered(area : Area2D) -> void:
 	if area.is_in_group("consumables"):
-		if area.is_in_group("foods") or area.energy < energy:
+		if area.is_in_group("foods") \
+				or (area.is_in_group("entities") and fondness(area) < 0.0):
 			eat(area)

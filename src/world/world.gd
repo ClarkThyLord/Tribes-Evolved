@@ -46,7 +46,7 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	for food in _food_pool:
-		food.free()
+		food.queue_free()
 
 
 func _process(delta : float) -> void:
