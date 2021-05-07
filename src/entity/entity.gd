@@ -157,7 +157,30 @@ func _draw() -> void:
 ## Public Methods
 func randomize(parent_a = null, parent_b = null) -> void:
 	if is_instance_valid(parent_a) and is_instance_valid(parent_b):
-		pass
+		var dominant = clamp(randf() - 0.8, 0.0, 0.2)
+		self.color = Color(
+				(parent_a.color.to_rgba32() * 0.4 + dominant) \
+				+ (parent_b.color.to_rgba32() * 0.4 - dominant))
+		self.energy = 25 + (100 * (1 - color.v))
+		self.speed = 14 + (16 * color.r)
+		self.vision = 30 + (16 * color.b)
+		self.potential = 5 + int(3 * color.g)
+		
+		_image = Image.new()
+		_image.create(potential, potential, false, Image.FORMAT_RGB8)
+		_image.lock()
+		var axis = (potential - 1) / 2
+		for x in range(axis + 1):
+			for y in range(potential):
+				if (randi() % 10) % 2 == 0:
+					_image.set_pixel(x, y, color)
+					if not x == axis:
+						_image.set_pixel(potential - x - 1, y, color)
+		_image.unlock()
+		
+		var texture = ImageTexture.new()
+		texture.create_from_image(_image, 0)
+		get_node("Sprite").texture = texture
 	else:
 		self.color = Color(randi())
 		self.energy = 25 + (100 * (1 - color.v))
