@@ -47,7 +47,7 @@ func _process(delta : float) -> void:
 		position.y = position.y if position.y < world_rect.end.y else world_rect.end.y
 
 
-func _input(event : InputEvent) -> void:
+func _unhandled_input(event : InputEvent) -> void:
 	if Engine.editor_hint:
 		return
 	

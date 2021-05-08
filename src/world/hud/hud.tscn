@@ -1,0 +1,59 @@
+[gd_scene format=2]
+
+[node name="HUD" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Events" type="VBoxContainer" parent="."]
+anchor_right = 0.248047
+anchor_bottom = 1.0
+rect_min_size = Vector2( 254, 600 )
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="Event" type="Label" parent="Events"]
+margin_right = 254.0
+margin_bottom = 14.0
+autowrap = true
+
+[node name="Controls" type="ScrollContainer" parent="."]
+anchor_left = 0.804688
+anchor_right = 1.0
+anchor_bottom = 0.541667
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Controls"]
+margin_right = 200.0
+margin_bottom = 325.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Speed" type="HBoxContainer" parent="Controls/VBoxContainer"]
+margin_right = 200.0
+margin_bottom = 16.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Controls/VBoxContainer/Speed"]
+margin_top = 1.0
+margin_right = 43.0
+margin_bottom = 15.0
+text = "Speed:"
+
+[node name="Value" type="HSlider" parent="Controls/VBoxContainer/Speed"]
+margin_left = 47.0
+margin_right = 200.0
+margin_bottom = 16.0
+size_flags_horizontal = 3
+max_value = 3.0
+step = 0.1
+value = 1.0
