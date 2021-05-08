@@ -23,4 +23,4 @@ script = ExtResource( 1 )
 environment = SubResource( 1 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-parent_world = NodePath("..")
+world = NodePath("..")
