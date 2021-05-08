@@ -127,6 +127,7 @@ func spawn(spawn_point : Vector2, parent_a = null, parent_b = null):
 		entity.position = spawn_point
 		entity.world = world
 		entity.connect("died", self, "_on_Entity_died")
+		entity.connect("mated", self, "_on_Entity_mated")
 		
 		_evolution_points += entity.energy
 		
@@ -135,12 +136,14 @@ func spawn(spawn_point : Vector2, parent_a = null, parent_b = null):
 
 
 func evolve(parent_a, parent_b) -> void:
+	print("evolve", parent_a, parent_b)
 	_lineage.append([
 		parent_a.duplicate(),
 		parent_b.duplicate()])
 	_add_ancestor(parent_a, parent_b)
 	_evolution_points = 0
 	_evolution_level += _evolution_level * evolution_rate
+	print(_lineage)
 
 
 
@@ -161,3 +164,7 @@ func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> vo
 
 func _on_Entity_died(entity) -> void:
 	_population.erase(entity)
+
+
+func _on_Entity_mated(location, parent_a, parent_b) -> void:
+	spawn(location, parent_a, parent_b)

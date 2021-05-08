@@ -7,6 +7,8 @@ extends Area2D
 ## Signals
 signal died(entity)
 
+signal mated(location, parent_a, parent_b)
+
 
 
 ## Exported Variables
@@ -86,9 +88,11 @@ func _process(delta : float) -> void:
 						best_target[2] = area.position
 				elif area.is_in_group("entities"):
 					if area.energy < energy and distance <= best_target[1] \
-						and area.is_in_group("entities") and fondness(area) < 0.0:
-						best_target[0] = area.energy
-						best_target[2] = area.position
+						and area.is_in_group("entities"):
+						if fondness(area) < 0.0 \
+							or (energy >= 600 and area.energy >= 600):
+							best_target[0] = area.energy
+							best_target[2] = area.position
 			
 			if not best_target[2] == Vector2.INF:
 				_target = best_target[2]
@@ -107,7 +111,9 @@ func _process(delta : float) -> void:
 			translate(position.direction_to(_target) * speed * delta)
 		else:
 			_target = Vector2.INF
+	
 	update()
+	self.energy -= 10 * delta
 
 
 func _draw() -> void:
@@ -158,16 +164,18 @@ func _draw() -> void:
 func randomize(parent_a = null, parent_b = null) -> void:
 	if is_instance_valid(parent_a) and is_instance_valid(parent_b):
 		var dominant = clamp(randf() - 0.8, 0.0, 0.2)
-		self.color = Color(
-				(parent_a.color.to_rgba32() * 0.4 + dominant) \
-				+ (parent_b.color.to_rgba32() * 0.4 - dominant))
+		var color_a = parent_a.color.to_rgba32() * (0.4 + dominant)
+		var color_b = parent_b.color.to_rgba32() * (0.4 - dominant)
+		self.color = Color(int(color_a + color_b))
+		self.color.a = 1.0
+		
 		self.energy = 25 + (100 * (1 - color.v))
 		self.speed = 14 + (16 * color.r)
 		self.vision = 30 + (16 * color.b)
 		self.potential = 5 + int(3 * color.g)
 		
 		_image = Image.new()
-		_image.create(potential, potential, false, Image.FORMAT_RGB8)
+		_image.create(potential, potential, false, Image.FORMAT_RGBA8)
 		_image.lock()
 		var axis = (potential - 1) / 2
 		for x in range(axis + 1):
@@ -183,13 +191,15 @@ func randomize(parent_a = null, parent_b = null) -> void:
 		get_node("Sprite").texture = texture
 	else:
 		self.color = Color(randi())
+		self.color.a = 1.0
+		
 		self.energy = 25 + (100 * (1 - color.v))
 		self.speed = 14 + (16 * color.r)
 		self.vision = 30 + (16 * color.b)
 		self.potential = 5 + int(3 * color.g)
 		
 		_image = Image.new()
-		_image.create(potential, potential, false, Image.FORMAT_RGB8)
+		_image.create(potential, potential, false, Image.FORMAT_RGBA8)
 		_image.lock()
 		var axis = (potential - 1) / 2
 		for x in range(axis + 1):
@@ -216,6 +226,10 @@ func set_energy(value : float) -> void:
 	
 	scale = Vector2.ONE * max(clamp(energy / 200.0, 1.0, 3.0), scale.x)
 	property_list_changed_notify()
+	
+	if Engine.editor_hint:
+		if energy <= 0.0:
+			die()
 
 
 func set_speed(value : float) -> void:
@@ -242,6 +256,10 @@ func set_potential(value : int) -> void:
 			and is_instance_valid(collision_shape.shape):
 		(collision_shape.shape as RectangleShape2D).extents = Vector2.ONE * potential
 	property_list_changed_notify()
+
+
+func get_image() -> Image:
+	return _image
 
 
 func get_dominant_color() -> int:
@@ -281,6 +299,13 @@ func eaten(by) -> float:
 	return energy * color[by.get_dominant_color()]
 
 
+func mate(partner) -> void:
+	print("mated", position, self, partner)
+	emit_signal("mated", position, self, partner)
+	self.energy -= 600
+	partner.energy -= 600
+
+
 func die() -> void:
 	queue_free()
 	emit_signal("died", self)
@@ -308,6 +333,10 @@ func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> vo
 
 func _on_area_entered(area : Area2D) -> void:
 	if area.is_in_group("consumables"):
-		if area.is_in_group("foods") \
-				or (area.is_in_group("entities") and fondness(area) < 0.0):
+		if area.is_in_group("foods"):
 			eat(area)
+		elif area.is_in_group("entities"):
+			if fondness(area) < 0.0:
+				eat(area)
+			elif energy >= 600 and area.energy >= 600:
+				mate(area)
