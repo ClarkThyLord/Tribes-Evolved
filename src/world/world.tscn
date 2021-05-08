@@ -3,7 +3,7 @@
 [ext_resource path="res://src/world/world.gd" type="Script" id=1]
 [ext_resource path="res://src/player/player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/world/hud/hud.tscn" type="PackedScene" id=3]
-[ext_resource path="res://src/spawn/lineage_view/lineage_view.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/spawn/spawn_view/spawn_view.tscn" type="PackedScene" id=4]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -28,7 +28,7 @@ environment = SubResource( 1 )
 
 [node name="HUD" parent="CanvasLayer" instance=ExtResource( 3 )]
 
-[node name="LineageView" parent="CanvasLayer" instance=ExtResource( 4 )]
+[node name="SpawnView" parent="CanvasLayer" instance=ExtResource( 4 )]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 world = NodePath("..")

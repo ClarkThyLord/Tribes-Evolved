@@ -33,6 +33,8 @@ var _target := Vector2.INF
 
 var _image : Image = null
 
+var _texture : ImageTexture = null
+
 var _hovered := false
 
 var _selected := false
@@ -186,9 +188,9 @@ func randomize(parent_a = null, parent_b = null) -> void:
 						_image.set_pixel(potential - x - 1, y, color)
 		_image.unlock()
 		
-		var texture = ImageTexture.new()
-		texture.create_from_image(_image, 0)
-		get_node("Sprite").texture = texture
+		_texture = ImageTexture.new()
+		_texture.create_from_image(_image, 0)
+		get_node("Sprite").texture = _texture
 	else:
 		self.color = Color(randi())
 		self.color.a = 1.0
@@ -210,9 +212,9 @@ func randomize(parent_a = null, parent_b = null) -> void:
 						_image.set_pixel(potential - x - 1, y, color)
 		_image.unlock()
 		
-		var texture = ImageTexture.new()
-		texture.create_from_image(_image, 0)
-		get_node("Sprite").texture = texture
+		_texture = ImageTexture.new()
+		_texture.create_from_image(_image, 0)
+		get_node("Sprite").texture = _texture
 
 
 func set_world(node_path : NodePath) -> void:
@@ -259,7 +261,11 @@ func set_potential(value : int) -> void:
 
 
 func get_image() -> Image:
-	return _image
+	return get_node("Sprite").texture.get_data()
+
+
+func get_texture() -> Texture:
+	return get_node("Sprite").texture
 
 
 func get_dominant_color() -> int:

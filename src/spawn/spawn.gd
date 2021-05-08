@@ -8,6 +8,13 @@ const Entity := preload("res://src/entity/entity.tscn")
 
 
 
+## Signals
+signal selected(spawn)
+
+signal unselected(spawn)
+
+
+
 ## Exported Variables
 export(float, 0.1, 1.0) var spawn_rate := 0.1
 
@@ -29,6 +36,8 @@ var _world
 var _lineage := []
 
 var _population := []
+
+var _evolutions := 0
 
 var _evolution_points := 0
 
@@ -114,6 +123,16 @@ func set_world(node_path : NodePath) -> void:
 		_world = get_node_or_null(world)
 
 
+func select() -> void:
+	_selected = true
+	emit_signal("selected", self)
+
+
+func unselect() -> void:
+	_selected = false
+	emit_signal("unselected", self)
+
+
 func spawn(spawn_point : Vector2, parent_a = null, parent_b = null):
 	if is_instance_valid(_world) \
 			and not _lineage.empty():
@@ -141,8 +160,10 @@ func evolve(parent_a, parent_b) -> void:
 		parent_a.duplicate(),
 		parent_b.duplicate()])
 	_add_ancestor(parent_a, parent_b)
+	_evolutions += 1
 	_evolution_points = 0
 	_evolution_level += _evolution_level * evolution_rate
+	scale += Vector2.ONE * (_evolutions * 0.15)
 	print(_lineage)
 
 
@@ -159,7 +180,7 @@ func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> vo
 		match event.button_index:
 			BUTTON_LEFT:
 				if event.doubleclick:
-					_selected = !_selected
+					select()
 
 
 func _on_Entity_died(entity) -> void:

@@ -33,6 +33,11 @@ var _food_pool := []
 
 
 
+## OnReady Variables
+onready var spawn_view := get_node("CanvasLayer/SpawnView")
+
+
+
 ## Built-In Virtual Methods
 func _ready() -> void:
 	randomize()
@@ -46,7 +51,8 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	for food in _food_pool:
-		food.queue_free()
+		if is_instance_valid(food):
+			food.queue_free()
 
 
 func _process(delta : float) -> void:
@@ -64,6 +70,7 @@ func _process(delta : float) -> void:
 		spawn.world = get_path()
 		spawn.position = random_world_point()
 		add_child(spawn)
+		spawn.connect("selected", self, "_on_Spawn_selected")
 
 
 func _draw() -> void:
@@ -129,3 +136,7 @@ func is_world_point(point : Vector2) -> bool:
 ## Private Methods
 func _on_Food_eaten(food) -> void:
 	_food_pool.append(food)
+
+
+func _on_Spawn_selected(spawn) -> void:
+	spawn_view.show_spawn(spawn)
