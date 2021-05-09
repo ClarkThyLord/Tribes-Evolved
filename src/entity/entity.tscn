@@ -6,9 +6,11 @@
 blend_mode = 1
 
 [sub_resource type="RectangleShape2D" id=2]
+resource_local_to_scene = true
 extents = Vector2( 5, 5 )
 
 [sub_resource type="CircleShape2D" id=3]
+resource_local_to_scene = true
 radius = 32.0
 
 [node name="Entity" type="Area2D" groups=[
