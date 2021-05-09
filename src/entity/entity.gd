@@ -18,7 +18,7 @@ signal mated(location, parent_a, parent_b)
 
 ## Enums
 enum States {
-	N, # EMPTY
+	N, # NULL
 	U, # UNBORN
 	B, # BORN
 	S, # SEEKING
@@ -197,19 +197,25 @@ func randomize(parent_a = null, parent_b = null) -> void:
 		self.energy = 25 + (100 * (1 - color.v))
 		self.speed = 14 + (16 * color.r)
 		self.vision = 30 + (16 * color.b)
-		self.potential = 5 + int(3 * color.g)
+		self.potential = parent_a.potential
 		
-		var image = Image.new()
-		image.create(potential, potential, false, Image.FORMAT_RGBA8)
+		var image : Image = parent_a.get_image()
+		var parent_image : Image = parent_b.get_image()
 		image.lock()
+		parent_image.lock()
 		var axis = (potential - 1) / 2
 		for x in range(axis + 1):
 			for y in range(potential):
 				if (randi() % 10) % 2 == 0:
-					image.set_pixel(x, y, color)
+					var pixel_color := parent_image.get_pixel(x, y)
+					if pixel_color == Color.black:
+						pixel_color = color
+					
+					image.set_pixel(x, y, pixel_color)
 					if not x == axis:
-						image.set_pixel(potential - x - 1, y, color)
+						image.set_pixel(potential - x - 1, y, pixel_color)
 		image.unlock()
+		parent_image.unlock()
 		
 		var texture = ImageTexture.new()
 		texture.create_from_image(image, 0)
@@ -223,7 +229,7 @@ func randomize(parent_a = null, parent_b = null) -> void:
 		self.vision = 30 + (16 * color.b)
 		self.potential = 5 + int(3 * color.g)
 		
-		var image = Image.new()
+		var image := Image.new()
 		image.create(potential, potential, false, Image.FORMAT_RGBA8)
 		image.lock()
 		var axis = (potential - 1) / 2

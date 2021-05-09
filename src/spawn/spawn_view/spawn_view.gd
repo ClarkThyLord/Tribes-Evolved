@@ -35,7 +35,7 @@ func set_spawn(value) -> void:
 	spawn = value
 	
 	for node in lineage.get_children():
-		remove_child(node)
+		lineage.remove_child(node)
 		node.queue_free()
 	
 	if is_inside_tree() and is_instance_valid(spawn):
