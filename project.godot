@@ -18,6 +18,10 @@ config/name="Tribes-Evolved"
 run/main_scene="res://src/world/world.tscn"
 config/icon="res://icon.png"
 
+[gui]
+
+theme/custom_font="res://assets/fonts/cave_story.tres"
+
 [input]
 
 move_up={
