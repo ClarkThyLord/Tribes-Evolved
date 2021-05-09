@@ -78,3 +78,7 @@ func _on_gui_input(event : InputEvent):
 			BUTTON_LEFT:
 				if event.doubleclick:
 					close()
+
+
+func _on_Close_pressed():
+	close()

@@ -181,6 +181,7 @@ func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> vo
 			BUTTON_LEFT:
 				if event.doubleclick:
 					select()
+					get_tree().set_input_as_handled()
 
 
 func _on_Entity_died(entity) -> void:
