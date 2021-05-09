@@ -4,10 +4,28 @@ extends Area2D
 
 
 
+## Refrences
+const CaveStoryFont := preload("res://assets/fonts/cave_story.tres")
+
+
+
 ## Signals
 signal died(entity)
 
 signal mated(location, parent_a, parent_b)
+
+
+
+## Enums
+enum States {
+	N, # EMPTY
+	U, # UNBORN
+	B, # BORN
+	S, # SEEKING
+	E, # EATING
+	M, # MATING
+	D, # DEAD
+}
 
 
 
@@ -29,11 +47,11 @@ export var world : NodePath setget set_world
 ## Private Variables
 var _world
 
+var _state : int = States.U
+
+var __state : int = States.N
+
 var _target := Vector2.INF
-
-var _image : Image = null
-
-var _texture : ImageTexture = null
 
 var _hovered := false
 
@@ -57,12 +75,17 @@ func _ready() -> void:
 	if Engine.editor_hint:
 		return
 	
+	_set_state(States.B)
 	self.world = world
 
 
 func _process(delta : float) -> void:
 	if Engine.editor_hint:
 		return
+	
+	_set_state(States.S)
+	if _selected and false: # Shows the state transitions
+		print(States.keys()[__state] + " > " + States.keys()[_state])
 	
 	if is_inside_tree() and is_instance_valid(_world):
 		if is_instance_valid(view):
@@ -149,11 +172,19 @@ func _draw() -> void:
 			color,
 			2
 		)
+		
+		var state = States.keys()[_state]
+		var char_size = CaveStoryFont.get_string_size(state)
+		draw_string(
+				CaveStoryFont,
+				Vector2(0, -12) - (char_size / 2),
+				state, color)
 
 
 
 ## Public Methods
 func randomize(parent_a = null, parent_b = null) -> void:
+	_set_state(States.U)
 	if is_instance_valid(parent_a) and is_instance_valid(parent_b):
 		var dominant = clamp(randf() - 0.8, 0.0, 0.2)
 		var color_a = parent_a.color.to_rgba32() * (0.4 + dominant)
@@ -166,21 +197,21 @@ func randomize(parent_a = null, parent_b = null) -> void:
 		self.vision = 30 + (16 * color.b)
 		self.potential = 5 + int(3 * color.g)
 		
-		_image = Image.new()
-		_image.create(potential, potential, false, Image.FORMAT_RGBA8)
-		_image.lock()
+		var image = Image.new()
+		image.create(potential, potential, false, Image.FORMAT_RGBA8)
+		image.lock()
 		var axis = (potential - 1) / 2
 		for x in range(axis + 1):
 			for y in range(potential):
 				if (randi() % 10) % 2 == 0:
-					_image.set_pixel(x, y, color)
+					image.set_pixel(x, y, color)
 					if not x == axis:
-						_image.set_pixel(potential - x - 1, y, color)
-		_image.unlock()
+						image.set_pixel(potential - x - 1, y, color)
+		image.unlock()
 		
-		_texture = ImageTexture.new()
-		_texture.create_from_image(_image, 0)
-		get_node("Sprite").texture = _texture
+		var texture = ImageTexture.new()
+		texture.create_from_image(image, 0)
+		get_node("Sprite").texture = texture
 	else:
 		self.color = Color(randi())
 		self.color.a = 1.0
@@ -190,21 +221,21 @@ func randomize(parent_a = null, parent_b = null) -> void:
 		self.vision = 30 + (16 * color.b)
 		self.potential = 5 + int(3 * color.g)
 		
-		_image = Image.new()
-		_image.create(potential, potential, false, Image.FORMAT_RGBA8)
-		_image.lock()
+		var image = Image.new()
+		image.create(potential, potential, false, Image.FORMAT_RGBA8)
+		image.lock()
 		var axis = (potential - 1) / 2
 		for x in range(axis + 1):
 			for y in range(potential):
 				if (randi() % 10) % 2 == 0:
-					_image.set_pixel(x, y, color)
+					image.set_pixel(x, y, color)
 					if not x == axis:
-						_image.set_pixel(potential - x - 1, y, color)
-		_image.unlock()
+						image.set_pixel(potential - x - 1, y, color)
+		image.unlock()
 		
-		_texture = ImageTexture.new()
-		_texture.create_from_image(_image, 0)
-		get_node("Sprite").texture = _texture
+		var texture = ImageTexture.new()
+		texture.create_from_image(image, 0)
+		get_node("Sprite").texture = texture
 
 
 func set_world(node_path : NodePath) -> void:
@@ -250,6 +281,10 @@ func set_potential(value : int) -> void:
 	property_list_changed_notify()
 
 
+func get_state() -> int:
+	return _state
+
+
 func get_image() -> Image:
 	return get_node("Sprite").texture.get_data()
 
@@ -287,6 +322,7 @@ func fondness(entity) -> float:
 
 
 func eat(consumable) -> void:
+	_set_state(States.E)
 	self.energy += consumable.eaten(self)
 
 
@@ -296,12 +332,14 @@ func eaten(by) -> float:
 
 
 func mate(partner) -> void:
+	_set_state(States.M)
 	emit_signal("mated", position, self, partner)
 	self.energy -= 600
 	partner.energy -= 600
 
 
 func die() -> void:
+	_set_state(States.D)
 	emit_signal("died", self)
 	get_parent().remove_child(self)
 	queue_free()
@@ -309,6 +347,11 @@ func die() -> void:
 
 
 ## Private Methods
+func _set_state(state : int) -> void:
+	__state = _state
+	_state = state
+
+
 func _on_mouse_entered() -> void:
 	_hovered = true
 
