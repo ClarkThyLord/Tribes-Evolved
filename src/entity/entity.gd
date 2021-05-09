@@ -130,7 +130,7 @@ func _process(delta : float) -> void:
 			_target = Vector2.INF
 	
 	update()
-	self.energy -= 10 * delta
+	self.energy -= (energy * 0.03) * delta
 
 
 func _draw() -> void:
