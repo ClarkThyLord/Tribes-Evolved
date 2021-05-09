@@ -24,10 +24,6 @@ onready var collision_shape : CollisionShape2D = get_node("CollisionShape2D")
 
 ## Built-In Virtual Methods
 func _ready() -> void:
-	if is_instance_valid(collision_shape) \
-			and is_instance_valid(collision_shape.shape):
-				collision_shape.shape = collision_shape.shape.duplicate()
-	
 	update()
 
 

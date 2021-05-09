@@ -58,16 +58,6 @@ func _ready() -> void:
 		return
 	
 	self.world = world
-	
-	if is_instance_valid(collision_shape) \
-			and is_instance_valid(collision_shape.shape):
-		collision_shape.shape = collision_shape.shape.duplicate()
-		(collision_shape.shape as RectangleShape2D).extents = Vector2.ONE * potential
-	
-	if is_instance_valid(view_shape) \
-			and is_instance_valid(view_shape.shape):
-		view_shape.shape = view_shape.shape.duplicate()
-		(view_shape.shape as CircleShape2D).radius = vision
 
 
 func _process(delta : float) -> void:
@@ -306,7 +296,6 @@ func eaten(by) -> float:
 
 
 func mate(partner) -> void:
-	print("mated", position, self, partner)
 	emit_signal("mated", position, self, partner)
 	self.energy -= 600
 	partner.energy -= 600

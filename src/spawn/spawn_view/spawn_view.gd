@@ -52,7 +52,6 @@ func set_spawn(value) -> void:
 
 
 func show_spawn(spawn) -> void:
-	print("here")
 	self.visible = true
 	self.spawn = spawn
 

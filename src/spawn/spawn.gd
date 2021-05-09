@@ -190,7 +190,6 @@ func spawn(spawn_point : Vector2, parent_a = null, parent_b = null):
 
 
 func evolve(parent_a, parent_b) -> void:
-	print("evolve", parent_a, parent_b)
 	_lineage.append([
 		parent_a.duplicate(),
 		parent_b.duplicate()])
@@ -199,7 +198,6 @@ func evolve(parent_a, parent_b) -> void:
 	_evolution_points = 0
 	_evolution_level += _evolution_level * evolution_rate
 	scale += Vector2.ONE * (_evolutions * 0.15)
-	print(_lineage)
 
 
 
