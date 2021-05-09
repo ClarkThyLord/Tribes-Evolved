@@ -2,6 +2,14 @@ extends ColorRect
 ## Spawn View
 
 
+
+## Refrences
+const EvolutionStep := preload("res://src/spawn/spawn_view/evolution_step/evolution_step.tscn")
+
+const EntityView := preload("res://src/entity/entity_view/entity_view.tscn")
+
+
+
 ## Public Variables
 var spawn setget set_spawn
 
@@ -12,6 +20,8 @@ onready var spawn_name : Label = get_node("VBoxContainer/HBoxContainer/SpawnName
 
 onready var evolution_progress : ProgressBar = get_node("VBoxContainer/HBoxContainer2/EvolutionProgress")
 
+onready var lineage : VBoxContainer = get_node("VBoxContainer/ScrollContainer/Lineage")
+
 
 
 ## Built-In Virtual Methods
@@ -19,40 +29,26 @@ func _ready() -> void:
 	close()
 
 
-func _draw() -> void:
-	if is_instance_valid(spawn):
-		var lineage = spawn._lineage
-		if lineage.empty():
-			return
-		
-		var depth = 0
-		for ancestor in lineage:
-			var pos = get_rect().size
-			pos.x /= 2
-			pos.y = 100 * depth
-			depth += 1
-			match typeof(ancestor):
-				TYPE_OBJECT:
-					_draw_entity(pos, ancestor)
-				TYPE_ARRAY:
-					for index in range(ancestor.size()):
-						if index == 0:
-							pos.x -= 150
-						else:
-							pos.x += 300
-						_draw_entity(pos, ancestor[index])
-
-
 
 ## Public Methods
 func set_spawn(value) -> void:
 	spawn = value
 	
+	for node in lineage.get_children():
+		remove_child(node)
+		node.queue_free()
+	
 	if is_inside_tree() and is_instance_valid(spawn):
 		spawn_name.text = spawn.spawn_name
 		evolution_progress.value = spawn.get_evolution_progress()
-	
-	update()
+		
+		for ancestors in spawn.get_lineage():
+			var evolution_step := EvolutionStep.instance()
+			for ancestor in ancestors if (typeof(ancestors) == TYPE_ARRAY) else [ancestors]:
+				var entity_view := EntityView.instance()
+				entity_view.texture = ancestor.get_texture()
+				evolution_step.add_child(entity_view)
+			lineage.add_child(evolution_step)
 
 
 func show_spawn(spawn) -> void:
@@ -71,18 +67,6 @@ func close() -> void:
 
 
 ## Private Methods
-func _draw_entity(position : Vector2, entity) -> void:
-	if not is_instance_valid(entity):
-		return
-	
-	var rect = entity.get_image().get_used_rect()
-	rect.position = position
-	rect.size *= 20
-	draw_texture_rect(
-			entity._texture,
-			rect, false)
-
-
 func _on_visibility_changed():
 	get_tree().paused = visible
 

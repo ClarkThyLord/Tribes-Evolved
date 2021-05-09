@@ -156,6 +156,10 @@ func unselect() -> void:
 	emit_signal("unselected", self)
 
 
+func get_lineage() -> Array:
+	return _lineage.duplicate()
+
+
 func get_evolutions() -> int:
 	return _evolutions
 

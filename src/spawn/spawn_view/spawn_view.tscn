@@ -68,11 +68,12 @@ margin_bottom = 576.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="LineageView" type="Control" parent="VBoxContainer/ScrollContainer"]
+[node name="Lineage" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
 margin_right = 1000.0
 margin_bottom = 472.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_constants/separation = 32
 
 [node name="Close" type="Button" parent="."]
 anchor_left = 0.5

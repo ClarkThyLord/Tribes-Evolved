@@ -1,0 +1,10 @@
+[gd_scene format=2]
+
+[node name="EvolutionStep" type="HBoxContainer"]
+margin_right = 1000.0
+margin_bottom = 128.0
+custom_constants/separation = 32
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -313,8 +313,9 @@ func mate(partner) -> void:
 
 
 func die() -> void:
-	queue_free()
 	emit_signal("died", self)
+	get_parent().remove_child(self)
+	queue_free()
 
 
 

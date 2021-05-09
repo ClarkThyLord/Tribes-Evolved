@@ -1,0 +1,8 @@
+[gd_scene format=2]
+
+[node name="EntityView" type="TextureRect"]
+margin_left = 436.0
+margin_right = 564.0
+margin_bottom = 128.0
+rect_min_size = Vector2( 128, 128 )
+expand = true
