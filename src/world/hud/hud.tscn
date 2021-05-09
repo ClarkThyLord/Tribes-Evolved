@@ -1,9 +1,13 @@
-[gd_scene format=2]
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/world/hud/hud.gd" type="Script" id=1]
 
 [node name="HUD" type="Control"]
+pause_mode = 2
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -19,7 +23,7 @@ __meta__ = {
 
 [node name="Event" type="Label" parent="Events"]
 margin_right = 254.0
-margin_bottom = 14.0
+margin_bottom = 13.0
 autowrap = true
 
 [node name="Controls" type="ScrollContainer" parent="."]
@@ -39,21 +43,24 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Speed" type="HBoxContainer" parent="Controls/VBoxContainer"]
-margin_right = 200.0
+margin_right = 199.0
 margin_bottom = 16.0
 mouse_filter = 2
 
 [node name="Label" type="Label" parent="Controls/VBoxContainer/Speed"]
 margin_top = 1.0
-margin_right = 43.0
-margin_bottom = 15.0
+margin_right = 46.0
+margin_bottom = 14.0
 text = "Speed:"
 
 [node name="Value" type="HSlider" parent="Controls/VBoxContainer/Speed"]
-margin_left = 47.0
-margin_right = 200.0
+margin_left = 50.0
+margin_right = 199.0
 margin_bottom = 16.0
 size_flags_horizontal = 3
-max_value = 3.0
+max_value = 5.0
 step = 0.1
 value = 1.0
+
+[connection signal="gui_input" from="Controls/VBoxContainer/Speed/Value" to="." method="_on_Speed_Value_gui_input"]
+[connection signal="value_changed" from="Controls/VBoxContainer/Speed/Value" to="." method="_on_Speed_Value_value_changed"]
