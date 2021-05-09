@@ -42,6 +42,8 @@ export(int, 5, 64) var potential := 5 setget set_potential
 
 export var world : NodePath setget set_world
 
+export var debug := false
+
 
 
 ## Private Variables
@@ -84,8 +86,8 @@ func _process(delta : float) -> void:
 		return
 	
 	_set_state(States.S)
-	if _selected and false: # Shows the state transitions
-		print(States.keys()[__state] + " > " + States.keys()[_state])
+	if _state != __state:
+		_print_state_transition()
 	
 	if is_inside_tree() and is_instance_valid(_world):
 		if is_instance_valid(view):
@@ -323,6 +325,7 @@ func fondness(entity) -> float:
 
 func eat(consumable) -> void:
 	_set_state(States.E)
+	_print_state_transition()
 	self.energy += consumable.eaten(self)
 
 
@@ -333,6 +336,7 @@ func eaten(by) -> float:
 
 func mate(partner) -> void:
 	_set_state(States.M)
+	_print_state_transition()
 	emit_signal("mated", position, self, partner)
 	self.energy -= 600
 	partner.energy -= 600
@@ -340,6 +344,7 @@ func mate(partner) -> void:
 
 func die() -> void:
 	_set_state(States.D)
+	_print_state_transition()
 	emit_signal("died", self)
 	get_parent().remove_child(self)
 	queue_free()
@@ -350,6 +355,11 @@ func die() -> void:
 func _set_state(state : int) -> void:
 	__state = _state
 	_state = state
+
+
+func _print_state_transition() -> void:
+	if debug and _selected:
+		print(States.keys()[__state] + " > " + States.keys()[_state])
 
 
 func _on_mouse_entered() -> void:
