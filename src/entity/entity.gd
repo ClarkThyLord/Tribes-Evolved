@@ -34,6 +34,8 @@ export var color := Color.white setget set_color
 
 export(float, 0.0, 1000.0) var energy := 25.0 setget set_energy
 
+export(float, 0.0, 1.0) var energy_rate := 0.03
+
 export(float, 0.0, 100.0) var speed := 22.0 setget set_speed
 
 export(float, 16.0, 100.0) var vision := 32.0 setget set_vision
@@ -130,7 +132,7 @@ func _process(delta : float) -> void:
 			_target = Vector2.INF
 	
 	update()
-	self.energy -= (energy * 0.03) * delta
+	self.energy -= (energy * energy_rate) * delta
 
 
 func _draw() -> void:
@@ -208,7 +210,7 @@ func randomize(parent_a = null, parent_b = null) -> void:
 			for y in range(potential):
 				if (randi() % 10) % 2 == 0:
 					var pixel_color := parent_image.get_pixel(x, y)
-					if pixel_color == Color.black:
+					if pixel_color.a > 0.0:
 						pixel_color = color
 					
 					image.set_pixel(x, y, pixel_color)
