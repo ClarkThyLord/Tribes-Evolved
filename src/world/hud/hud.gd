@@ -3,14 +3,35 @@ extends Control
 
 
 
+## Refrences
+const Event := preload("res://src/world/hud/event/event.tscn")
+
+
+
 ## OnReady Variables
-onready var speed_value := get_node("Controls/VBoxContainer/Speed/Value")
+onready var events : VBoxContainer = get_node("Events")
+
+onready var speed_value : HSlider = get_node("Controls/VBoxContainer/Speed/Value")
 
 
 
 ## Built-In Virtual Methods
 func _process(delta : float) -> void:
 	visible = not get_tree().paused
+	
+	for event in events.get_children():
+		if event.modulate.a <= 0.0:
+			events.remove_child(event)
+			event.queue_free()
+		event.modulate.a -= 0.01
+
+
+
+## Public Methods
+func add_event(text : String) -> void:
+	var event := Event.instance()
+	event.text = text
+	events.add_child(event)
 
 
 

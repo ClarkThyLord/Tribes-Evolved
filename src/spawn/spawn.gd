@@ -11,6 +11,8 @@ const CaveStoryFont := preload("res://assets/fonts/cave_story.tres")
 
 
 ## Signals
+signal evolved(spawn)
+
 signal selected(spawn)
 
 signal unselected(spawn)
@@ -198,6 +200,7 @@ func evolve(parent_a, parent_b) -> void:
 	_evolution_points = 0
 	_evolution_level += _evolution_level * evolution_rate
 	scale += Vector2.ONE * (_evolutions * 0.15)
+	emit_signal("evolved", self)
 
 
 

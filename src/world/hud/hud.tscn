@@ -25,11 +25,6 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="Event" type="Label" parent="Events"]
-margin_right = 254.0
-margin_bottom = 13.0
-autowrap = true
-
 [node name="Controls" type="ScrollContainer" parent="."]
 anchor_left = 0.804688
 anchor_right = 1.0

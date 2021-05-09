@@ -34,6 +34,8 @@ var _food_pool := []
 
 
 ## OnReady Variables
+onready var hud := get_node("CanvasLayer/HUD")
+
 onready var spawn_view := get_node("CanvasLayer/SpawnView")
 
 
@@ -69,8 +71,10 @@ func _process(delta : float) -> void:
 		var spawn = Spawn.instance()
 		spawn.world = get_path()
 		spawn.position = random_world_point()
+		spawn.connect("evolved", self, "_on_Spawn_evolved")
 		add_child(spawn)
 		spawn.connect("selected", self, "_on_Spawn_selected")
+		hud.add_event(spawn.spawn_name + "have joined the world!")
 
 
 func _draw() -> void:
@@ -136,6 +140,10 @@ func is_world_point(point : Vector2) -> bool:
 ## Private Methods
 func _on_Food_eaten(food) -> void:
 	_food_pool.append(food)
+
+
+func _on_Spawn_evolved(spawn) -> void:
+	hud.add_event(spawn.spawn_name + "have evolved!")
 
 
 func _on_Spawn_selected(spawn) -> void:

@@ -64,7 +64,7 @@ func _process(delta : float) -> void:
 	if Engine.editor_hint:
 		return
 	
-	if is_instance_valid(_world):
+	if is_inside_tree() and is_instance_valid(_world):
 		if is_instance_valid(view):
 			var areas := view.get_overlapping_areas()
 			var best_target = [-INF, INF, Vector2.INF]
