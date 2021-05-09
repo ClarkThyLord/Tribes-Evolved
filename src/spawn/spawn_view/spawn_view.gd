@@ -7,6 +7,13 @@ var spawn setget set_spawn
 
 
 
+## OnReady Variables
+onready var spawn_name : Label = get_node("VBoxContainer/HBoxContainer/SpawnName")
+
+onready var evolution_progress : ProgressBar = get_node("VBoxContainer/HBoxContainer2/EvolutionProgress")
+
+
+
 ## Built-In Virtual Methods
 func _ready() -> void:
 	close()
@@ -40,6 +47,10 @@ func _draw() -> void:
 ## Public Methods
 func set_spawn(value) -> void:
 	spawn = value
+	
+	if is_inside_tree() and is_instance_valid(spawn):
+		spawn_name.text = spawn.spawn_name
+		evolution_progress.value = spawn.get_evolution_progress()
 	
 	update()
 

@@ -16,6 +16,8 @@ signal unselected(spawn)
 
 
 ## Exported Variables
+export var spawn_name := ""
+
 export(float, 0.1, 1.0) var spawn_rate := 0.1
 
 export(int, 0, 250) var spawn_radius := 50
@@ -39,9 +41,9 @@ var _population := []
 
 var _evolutions := 0
 
-var _evolution_points := 0
+var _evolution_points := 0.0
 
-var _evolution_level := 500
+var _evolution_level := 500.0
 
 var _selected := false
 
@@ -62,6 +64,12 @@ func _ready() -> void:
 	
 	if _lineage.empty():
 		_add_ancestor()
+		_draw_color = _lineage[0].color
+		spawn_name = char(int(65 + (25 * _draw_color.r))) \
+				+ char(int(65 + (25 * _draw_color.g))) \
+				+ char(int(65 + (25 * _draw_color.b))) \
+				+ "-" \
+				+ char(int(48 + (10 * _draw_color.v)))
 	
 	_draw_points = 4 + (randi() % 18)
 
@@ -131,6 +139,14 @@ func select() -> void:
 func unselect() -> void:
 	_selected = false
 	emit_signal("unselected", self)
+
+
+func get_evolutions() -> int:
+	return _evolutions
+
+
+func get_evolution_progress() -> float:
+	return _evolution_points / _evolution_level
 
 
 func spawn(spawn_point : Vector2, parent_a = null, parent_b = null):
