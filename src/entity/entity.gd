@@ -51,7 +51,7 @@ export var debug := false
 ## Private Variables
 var _world
 
-var _state : int = States.U
+var _state : int = States.N
 
 var __state : int = States.N
 
@@ -326,7 +326,7 @@ func unselect() -> void:
 func fondness(entity) -> float:
 	var value = 0.0
 	
-	value = get_dominant_color() - entity.get_dominant_color() 
+	value = get_dominant_color() - entity.get_dominant_color()
 	
 	return clamp(value, -1.0, 1.0)
 
