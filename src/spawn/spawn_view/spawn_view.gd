@@ -63,6 +63,10 @@ func show_spawn(spawn) -> void:
 
 func close() -> void:
 	self.visible = false
+	
+	if is_instance_valid(spawn):
+		spawn.unselect()
+		spawn = null
 
 
 

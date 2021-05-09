@@ -6,6 +6,8 @@ extends Area2D
 ## Refrences
 const Entity := preload("res://src/entity/entity.tscn")
 
+const CaveStoryFont := preload("res://assets/fonts/cave_story.tres")
+
 
 
 ## Signals
@@ -44,6 +46,8 @@ var _evolutions := 0
 var _evolution_points := 0.0
 
 var _evolution_level := 500.0
+
+var _hovered := false
 
 var _selected := false
 
@@ -104,6 +108,7 @@ func _process(delta : float) -> void:
 
 
 func _draw() -> void:
+	var identify := _hovered or _selected
 	draw_arc(
 		Vector2.ZERO,
 		32,
@@ -111,8 +116,18 @@ func _draw() -> void:
 		deg2rad(360 + _draw_time),
 		_draw_points,
 		_draw_color,
-		4 if _selected else 2
+		4 if identify else 2
 	)
+	
+	if identify:
+		var name_size := CaveStoryFont.get_string_size(spawn_name)
+		draw_string(
+				CaveStoryFont,
+				Vector2(
+						0 - (name_size.x / 2),
+						0),
+				spawn_name,
+				_draw_color)
 
 
 
@@ -202,6 +217,14 @@ func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> vo
 
 func _on_Entity_died(entity) -> void:
 	_population.erase(entity)
+
+
+func _on_mouse_entered():
+	_hovered = true
+
+
+func _on_mouse_exited():
+	_hovered = false
 
 
 func _on_Entity_mated(location, parent_a, parent_b) -> void:
