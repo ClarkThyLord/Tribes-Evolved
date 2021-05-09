@@ -20,6 +20,7 @@ config/icon="res://icon.png"
 
 [gui]
 
+theme/custom="res://assets/theme/theme.tres"
 theme/custom_font="res://assets/fonts/cave_story.tres"
 
 [input]

@@ -83,7 +83,11 @@ margin_left = 480.0
 margin_top = -296.0
 margin_right = 508.0
 margin_bottom = -269.0
+action_mode = 0
 text = "X"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
