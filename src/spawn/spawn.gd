@@ -196,6 +196,7 @@ func spawn(spawn_point : Vector2, parent_a = null, parent_b = null):
 
 
 func evolve(parent_a, parent_b) -> void:
+	parent_a = _lineage.back()
 	_lineage.append([
 		parent_a.duplicate(),
 		parent_b.duplicate()])
