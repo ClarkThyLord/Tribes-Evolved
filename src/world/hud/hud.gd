@@ -20,7 +20,7 @@ func _process(delta : float) -> void:
 	visible = not get_tree().paused
 	
 	for event in events.get_children():
-		if event.modulate.a <= 0.0:
+		if event.modulate.a <= 0.2:
 			events.remove_child(event)
 			event.queue_free()
 		event.modulate.a -= 0.01
@@ -28,9 +28,10 @@ func _process(delta : float) -> void:
 
 
 ## Public Methods
-func add_event(text : String) -> void:
+func add_event(text : String, color := Color.white) -> void:
 	var event := Event.instance()
 	event.text = text
+	event.add_color_override("font_color", color)
 	events.add_child(event)
 
 

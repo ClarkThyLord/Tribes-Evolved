@@ -74,7 +74,7 @@ func _process(delta : float) -> void:
 		spawn.connect("evolved", self, "_on_Spawn_evolved")
 		add_child(spawn)
 		spawn.connect("selected", self, "_on_Spawn_selected")
-		hud.add_event(spawn.spawn_name + "have joined the world!")
+		hud.add_event(spawn.spawn_name + " have joined the world!", spawn.get_color())
 
 
 func _draw() -> void:
@@ -143,7 +143,7 @@ func _on_Food_eaten(food) -> void:
 
 
 func _on_Spawn_evolved(spawn) -> void:
-	hud.add_event(spawn.spawn_name + "have evolved!")
+	hud.add_event(spawn.spawn_name + " have evolved!", spawn.get_color())
 
 
 func _on_Spawn_selected(spawn) -> void:

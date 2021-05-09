@@ -158,6 +158,10 @@ func unselect() -> void:
 	emit_signal("unselected", self)
 
 
+func get_color() -> Color:
+	return _draw_color
+
+
 func get_lineage() -> Array:
 	return _lineage.duplicate()
 
