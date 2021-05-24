@@ -372,20 +372,24 @@ func _print_state_transition() -> void:
 
 func _on_mouse_entered() -> void:
 	_hovered = true
+	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 
 
 func _on_mouse_exited() -> void:
 	_hovered = false
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
 
 func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> void:
-	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and not event.pressed:
-			if _selected:
-				unselect()
-			else:
-				select()
-			get_tree().set_input_as_handled()
+	if event is InputEventMouse:
+		Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
+		if event is InputEventMouseButton:
+			if event.button_index == BUTTON_LEFT and not event.pressed:
+				if _selected:
+					unselect()
+				else:
+					select()
+				get_tree().set_input_as_handled()
 
 
 func _on_area_entered(area : Area2D) -> void:

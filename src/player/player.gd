@@ -24,6 +24,10 @@ var _selected := []
 
 
 ## Built-In Virtual Methods
+func _ready() -> void:
+	set_world(world)
+
+
 func _process(delta : float) -> void:
 	var direction := Vector2()
 	if Input.is_action_pressed("move_up"):
@@ -52,20 +56,25 @@ func _unhandled_input(event : InputEvent) -> void:
 		return
 	
 	if event is InputEventMouseButton:
-			match event.button_index:
-				BUTTON_LEFT:
-					_dragging = event.pressed
-				BUTTON_WHEEL_UP:
-					if zoom.x > 0.1:
-						self.zoom += -Vector2.ONE * 0.1
-						get_tree().set_input_as_handled()
-				BUTTON_WHEEL_DOWN:
-					if zoom.x < 3:
-						self.zoom += Vector2.ONE * 0.1
-						get_tree().set_input_as_handled()
-	elif event is InputEventMouseMotion:
+		match event.button_index:
+			BUTTON_LEFT:
+				_dragging = event.pressed and not event.doubleclick
+				if _dragging:
+					get_tree().set_input_as_handled()
+				else:
+					Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+			BUTTON_WHEEL_UP:
+				if zoom.x > 0.1:
+					self.zoom += -Vector2.ONE * 0.1
+					get_tree().set_input_as_handled()
+			BUTTON_WHEEL_DOWN:
+				if zoom.x < 3:
+					self.zoom += Vector2.ONE * 0.1
+					get_tree().set_input_as_handled()
+	if event is InputEventMouseMotion:
 		if _dragging:
 			translate(-event.relative.normalized() * speed_pan * zoom)
+			Input.set_default_cursor_shape(Input.CURSOR_MOVE)
 			get_tree().set_input_as_handled()
 
 

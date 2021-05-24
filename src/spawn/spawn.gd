@@ -217,12 +217,14 @@ func _add_ancestor(parent_a = null, parent_b = null) -> void:
 
 
 func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> void:
-	if event is InputEventMouseButton:
-		match event.button_index:
-			BUTTON_LEFT:
-				if event.doubleclick:
-					select()
-					get_tree().set_input_as_handled()
+	if event is InputEventMouse:
+		Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
+		if event is InputEventMouseButton:
+			match event.button_index:
+				BUTTON_LEFT:
+					if event.doubleclick:
+						select()
+			get_tree().set_input_as_handled()
 
 
 func _on_Entity_died(entity) -> void:
@@ -231,10 +233,12 @@ func _on_Entity_died(entity) -> void:
 
 func _on_mouse_entered():
 	_hovered = true
+	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 
 
 func _on_mouse_exited():
 	_hovered = false
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
 
 func _on_Entity_mated(location, parent_a, parent_b) -> void:

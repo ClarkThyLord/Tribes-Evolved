@@ -84,6 +84,7 @@ margin_left = 480.0
 margin_top = -296.0
 margin_right = 508.0
 margin_bottom = -269.0
+mouse_default_cursor_shape = 2
 action_mode = 0
 text = "X"
 __meta__ = {
