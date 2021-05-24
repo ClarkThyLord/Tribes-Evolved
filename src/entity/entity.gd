@@ -397,7 +397,7 @@ func _on_area_entered(area : Area2D) -> void:
 		if area.is_in_group("foods"):
 			eat(area)
 		elif area.is_in_group("entities"):
-			if fondness(area) < 0.0:
+			if fondness(area) < 0.0 and energy > area.energy:
 				eat(area)
 			elif energy >= 600 and area.energy >= 600:
 				mate(area)
