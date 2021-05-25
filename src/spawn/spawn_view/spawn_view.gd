@@ -44,6 +44,14 @@ func set_spawn(value) -> void:
 	
 	if is_inside_tree() and is_instance_valid(spawn):
 		spawn_name.text = spawn.spawn_name
+		
+		entities.text = "%s LIVING / %s DEAD / %s TOTAL" % [
+			spawn.get_population_count(),
+			spawn.get_total_deaths(),
+			spawn.get_total_lives(),
+		]
+		total_energy.text = "%s   " % int(spawn.get_total_energy())
+		
 		evolution_progress.value = spawn.get_evolution_progress()
 		
 		for ancestors in spawn.get_lineage():

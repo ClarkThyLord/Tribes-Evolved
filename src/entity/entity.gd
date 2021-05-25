@@ -10,9 +10,11 @@ const CaveStoryFont := preload("res://assets/fonts/cave_story.tres")
 
 
 ## Signals
-signal died(entity)
+signal ate(energy)
 
 signal mated(location, parent_a, parent_b)
+
+signal died(entity)
 
 
 
@@ -334,7 +336,9 @@ func fondness(entity) -> float:
 func eat(consumable) -> void:
 	_set_state(States.E)
 	_print_state_transition()
-	self.energy += consumable.eaten(self)
+	var consumable_energy = consumable.eaten(self)
+	self.energy += consumable_energy
+	emit_signal("ate", consumable_energy)
 
 
 func eaten(by) -> float:

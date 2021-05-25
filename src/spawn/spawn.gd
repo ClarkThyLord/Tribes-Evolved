@@ -49,6 +49,12 @@ var _evolution_points := 0.0
 
 var _evolution_level := 500.0
 
+var _total_lives := 0
+
+var _total_deaths := 0
+
+var _total_energy := 0.0
+
 var _hovered := false
 
 var _selected := false
@@ -170,6 +176,26 @@ func get_evolutions() -> int:
 	return _evolutions
 
 
+func get_population() -> Array:
+	return _population.duplicate()
+
+
+func get_population_count() -> int:
+	return _population.size()
+
+
+func get_total_deaths() -> int:
+	return _total_deaths
+
+
+func get_total_lives() -> int:
+	return _total_lives
+
+
+func get_total_energy() -> float:
+	return _total_energy
+
+
 func get_evolution_progress() -> float:
 	return _evolution_points / _evolution_level
 
@@ -186,13 +212,15 @@ func spawn(spawn_point : Vector2, parent_a = null, parent_b = null):
 		var entity = _lineage.back().duplicate()
 		entity.position = spawn_point
 		entity.world = world
-		entity.connect("died", self, "_on_Entity_died")
+		entity.connect("ate", self, "_on_Entity_ate")
 		entity.connect("mated", self, "_on_Entity_mated")
+		entity.connect("died", self, "_on_Entity_died")
 		
 		_evolution_points += entity.energy
 		
 		_population.append(entity)
 		_world.add_child(entity)
+		_total_lives += 1
 
 
 func evolve(parent_a, parent_b) -> void:
@@ -227,8 +255,17 @@ func _on_input_event(viewport : Node, event : InputEvent, shape_idx : int) -> vo
 			get_tree().set_input_as_handled()
 
 
+func _on_Entity_ate(energy : float) -> void:
+	_total_energy += energy
+
+
+func _on_Entity_mated(location : Vector2, parent_a, parent_b) -> void:
+	spawn(location, parent_a, parent_b)
+
+
 func _on_Entity_died(entity) -> void:
 	_population.erase(entity)
+	_total_deaths += 1
 
 
 func _on_mouse_entered():
@@ -239,7 +276,3 @@ func _on_mouse_entered():
 func _on_mouse_exited():
 	_hovered = false
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
-
-
-func _on_Entity_mated(location, parent_a, parent_b) -> void:
-	spawn(location, parent_a, parent_b)

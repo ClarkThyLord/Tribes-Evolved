@@ -69,33 +69,33 @@ margin_right = 936.0
 margin_bottom = 88.0
 alignment = 1
 
-[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/Stats"]
-margin_left = 241.0
-margin_right = 379.0
-margin_bottom = 20.0
-custom_fonts/font = SubResource( 2 )
-text = "ENTITIES:   "
-
-[node name="Entities" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/Stats"]
-margin_left = 383.0
-margin_right = 449.0
-margin_bottom = 20.0
-custom_fonts/font = SubResource( 2 )
-text = "####   "
-
 [node name="Label2" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/Stats"]
-margin_left = 453.0
-margin_right = 643.0
+margin_left = 241.0
+margin_right = 431.0
 margin_bottom = 20.0
 custom_fonts/font = SubResource( 2 )
 text = "TOTAL ENERGY:   "
 
 [node name="TotalEnergy" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/Stats"]
-margin_left = 647.0
-margin_right = 695.0
+margin_left = 435.0
+margin_right = 483.0
 margin_bottom = 20.0
 custom_fonts/font = SubResource( 2 )
 text = "####"
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/Stats"]
+margin_left = 487.0
+margin_right = 625.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 2 )
+text = "ENTITIES:   "
+
+[node name="Entities" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/Stats"]
+margin_left = 629.0
+margin_right = 695.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 2 )
+text = "####   "
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
 margin_top = 92.0
