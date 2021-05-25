@@ -145,18 +145,14 @@ func _draw() -> void:
 		if _selected:
 			color = Color.white
 		
-		draw_arc(
-			Vector2.ZERO,
-			16, 0, 360, 16, color, 2
-		)
-		
 		if not _target == Vector2.INF:
-			draw_line(
-				to_local(position),
-				to_local(_target),
-				color,
-				2
-			)
+			if debug:
+				draw_line(
+					to_local(position),
+					to_local(_target),
+					color,
+					2
+				)
 			
 			var target_angle := rad2deg(_target.angle_to_point(position))
 			draw_arc(
@@ -179,12 +175,18 @@ func _draw() -> void:
 			2
 		)
 		
-		var state = States.keys()[_state]
-		var char_size = CaveStoryFont.get_string_size(state)
-		draw_string(
-				CaveStoryFont,
-				Vector2(0, -12) - (char_size / 2),
-				state, color)
+		if debug:
+			draw_arc(
+				Vector2.ZERO,
+				16, 0, 360, 16, color, 2
+			)
+			
+			var state = States.keys()[_state]
+			var char_size = CaveStoryFont.get_string_size(state)
+			draw_string(
+					CaveStoryFont,
+					Vector2(0, -12) - (char_size / 2),
+					state, color)
 
 
 
