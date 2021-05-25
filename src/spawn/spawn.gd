@@ -75,7 +75,7 @@ func _ready() -> void:
 				+ char(int(65 + (25 * _draw_color.g))) \
 				+ char(int(65 + (25 * _draw_color.b))) \
 				+ "-" \
-				+ char(int(48 + (10 * _draw_color.v)))
+				+ char(int(48 + (9 * _draw_color.v)))
 	
 	_draw_points = 4 + (randi() % 18)
 
