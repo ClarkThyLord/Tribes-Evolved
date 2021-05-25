@@ -16,11 +16,15 @@ var spawn setget set_spawn
 
 
 ## OnReady Variables
-onready var spawn_name : Label = get_node("VBoxContainer/HBoxContainer/SpawnName")
+onready var spawn_name : Label = get_node("VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/Name")
 
-onready var evolution_progress : ProgressBar = get_node("VBoxContainer/HBoxContainer2/EvolutionProgress")
+onready var entities : Label = get_node("VBoxContainer/MarginContainer/VBoxContainer/Stats/Entities")
 
-onready var lineage : VBoxContainer = get_node("VBoxContainer/ScrollContainer/Lineage")
+onready var total_energy : Label = get_node("VBoxContainer/MarginContainer/VBoxContainer/Stats/TotalEnergy")
+
+onready var evolution_progress : ProgressBar = get_node("VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer3/EvolutionProgress")
+
+onready var lineage : VBoxContainer = get_node("VBoxContainer/ColorRect/ScrollContainer/MarginContainer/Lineage")
 
 
 

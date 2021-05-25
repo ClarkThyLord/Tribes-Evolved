@@ -1,10 +1,14 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://src/spawn/spawn_view/spawn_view.gd" type="Script" id=1]
 [ext_resource path="res://assets/fonts/cave_story.ttf" type="DynamicFontData" id=2]
 
 [sub_resource type="DynamicFont" id=1]
 size = 64
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 32
 font_data = ExtResource( 2 )
 
 [node name="SpawnView" type="ColorRect"]
@@ -26,18 +30,32 @@ margin_left = -500.0
 margin_top = -288.0
 margin_right = 500.0
 margin_bottom = 288.0
+custom_constants/separation = 16
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
 margin_right = 1000.0
+margin_bottom = 116.0
+custom_constants/margin_right = 32
+custom_constants/margin_top = 0
+custom_constants/margin_left = 32
+custom_constants/margin_bottom = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer"]
+margin_left = 32.0
+margin_right = 968.0
+margin_bottom = 116.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+margin_right = 936.0
 margin_bottom = 64.0
 alignment = 1
 
-[node name="SpawnName" type="Label" parent="VBoxContainer/HBoxContainer"]
-margin_left = 359.0
-margin_right = 641.0
+[node name="Name" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+margin_left = 327.0
+margin_right = 609.0
 margin_bottom = 64.0
 rect_min_size = Vector2( 0, 64 )
 custom_fonts/font = SubResource( 1 )
@@ -45,35 +63,103 @@ text = "SPAWN NAME"
 align = 1
 valign = 1
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Stats" type="HBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
 margin_top = 68.0
-margin_right = 1000.0
-margin_bottom = 92.0
+margin_right = 936.0
+margin_bottom = 88.0
+alignment = 1
 
-[node name="EvolutionProgress" type="ProgressBar" parent="VBoxContainer/HBoxContainer2"]
-margin_right = 1000.0
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/Stats"]
+margin_left = 241.0
+margin_right = 379.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 2 )
+text = "ENTITIES:   "
+
+[node name="Entities" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/Stats"]
+margin_left = 383.0
+margin_right = 449.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 2 )
+text = "####   "
+
+[node name="Label2" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/Stats"]
+margin_left = 453.0
+margin_right = 643.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 2 )
+text = "TOTAL ENERGY:   "
+
+[node name="TotalEnergy" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/Stats"]
+margin_left = 647.0
+margin_right = 695.0
+margin_bottom = 20.0
+custom_fonts/font = SubResource( 2 )
+text = "####"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/MarginContainer/VBoxContainer"]
+margin_top = 92.0
+margin_right = 936.0
+margin_bottom = 116.0
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+margin_top = 2.0
+margin_right = 285.0
+margin_bottom = 22.0
+custom_fonts/font = SubResource( 2 )
+text = "EVOLUTION PROGRESS:   "
+
+[node name="EvolutionProgress" type="ProgressBar" parent="VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 289.0
+margin_right = 936.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 0, 24 )
 size_flags_horizontal = 3
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
-margin_top = 96.0
+margin_top = 132.0
 margin_right = 1000.0
-margin_bottom = 100.0
+margin_bottom = 136.0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-margin_top = 104.0
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer"]
+margin_top = 152.0
 margin_right = 1000.0
 margin_bottom = 576.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+color = Color( 0, 0, 0, 0.0313726 )
 
-[node name="Lineage" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
-margin_right = 1000.0
-margin_bottom = 472.0
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/separation = 32
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ColorRect/ScrollContainer"]
+margin_right = 1000.0
+margin_bottom = 424.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/margin_right = 16
+custom_constants/margin_top = 16
+custom_constants/margin_left = 16
+custom_constants/margin_bottom = 16
+
+[node name="Lineage" type="VBoxContainer" parent="VBoxContainer/ColorRect/ScrollContainer/MarginContainer"]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 984.0
+margin_bottom = 408.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 16
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Close" type="Button" parent="."]
 anchor_left = 0.5
