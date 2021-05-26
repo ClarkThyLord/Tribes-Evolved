@@ -36,7 +36,7 @@ export var color := Color.white setget set_color
 
 export(float, 0.0, 1000.0) var energy := 25.0 setget set_energy
 
-export(float, 0.0, 1.0) var energy_rate := 0.03
+export(float, 0.0, 1.0) var energy_rate := 0.07
 
 export(float, 0.0, 100.0) var speed := 22.0 setget set_speed
 
@@ -52,6 +52,8 @@ export var debug := false
 
 ## Private Variables
 var _world
+
+var _life_span := 0.0
 
 var _state : int = States.N
 
@@ -135,6 +137,9 @@ func _process(delta : float) -> void:
 	
 	update()
 	self.energy -= (energy * energy_rate) * delta
+	_life_span += 0.1 * delta
+	if _life_span >= life_span:
+		die()
 
 
 func _draw() -> void:
