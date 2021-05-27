@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/spawn/spawn_view/spawn_view.gd" type="Script" id=1]
 [ext_resource path="res://assets/fonts/cave_story.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://src/spawn/spawn_view/lineage/lineage.tscn" type="PackedScene" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 size = 64
@@ -130,16 +131,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 0, 0, 0, 0.0313726 )
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/ColorRect"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ColorRect/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ColorRect"]
 margin_right = 1000.0
 margin_bottom = 424.0
 size_flags_horizontal = 3
@@ -149,17 +141,26 @@ custom_constants/margin_top = 16
 custom_constants/margin_left = 16
 custom_constants/margin_bottom = 16
 
-[node name="Lineage" type="VBoxContainer" parent="VBoxContainer/ColorRect/ScrollContainer/MarginContainer"]
+[node name="ViewportContainer" type="ViewportContainer" parent="VBoxContainer/ColorRect/MarginContainer"]
 margin_left = 16.0
 margin_top = 16.0
 margin_right = 984.0
 margin_bottom = 408.0
+mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_constants/separation = 16
-__meta__ = {
-"_edit_use_anchors_": false
-}
+stretch = true
+
+[node name="Viewport" type="Viewport" parent="VBoxContainer/ColorRect/MarginContainer/ViewportContainer"]
+size = Vector2( 968, 392 )
+transparent_bg = true
+handle_input_locally = false
+disable_3d = true
+usage = 0
+render_target_update_mode = 3
+gui_disable_input = true
+
+[node name="Lineage" parent="VBoxContainer/ColorRect/MarginContainer/ViewportContainer/Viewport" instance=ExtResource( 3 )]
 
 [node name="Close" type="Button" parent="."]
 anchor_left = 0.5
@@ -177,6 +178,37 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Save" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = 464.0
+margin_top = 268.0
+margin_right = 502.0
+margin_bottom = 295.0
+mouse_default_cursor_shape = 2
+action_mode = 0
+text = "SAVE"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileDialog" type="FileDialog" parent="Save"]
+margin_right = 301.0
+margin_bottom = 254.0
+rect_min_size = Vector2( 124, 254 )
+popup_exclusive = true
+window_title = "Save Lineage Image"
+resizable = true
+filters = PoolStringArray( "*.png ; Save PNG" )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="Close" to="." method="_on_Close_pressed"]
+[connection signal="pressed" from="Save" to="." method="_on_Save_pressed"]
+[connection signal="file_selected" from="Save/FileDialog" to="." method="_on_Save_FileDialog_file_selected"]
+[connection signal="visibility_changed" from="Save/FileDialog" to="." method="_on_Save_FileDialog_visibility_changed"]

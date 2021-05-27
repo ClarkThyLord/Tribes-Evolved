@@ -24,8 +24,11 @@ onready var total_energy : Label = get_node("VBoxContainer/MarginContainer/VBoxC
 
 onready var evolution_progress : ProgressBar = get_node("VBoxContainer/MarginContainer/VBoxContainer/HBoxContainer3/EvolutionProgress")
 
-onready var lineage : VBoxContainer = get_node("VBoxContainer/ColorRect/ScrollContainer/MarginContainer/Lineage")
+onready var viewport : Viewport = get_node("VBoxContainer/ColorRect/MarginContainer/ViewportContainer/Viewport")
 
+onready var lineage : VBoxContainer = get_node("VBoxContainer/ColorRect/MarginContainer/ViewportContainer/Viewport/Lineage/VBoxContainer")
+
+onready var save_file_dialog : FileDialog = get_node("Save/FileDialog")
 
 
 ## Built-In Virtual Methods
@@ -80,6 +83,8 @@ func close() -> void:
 ## Private Methods
 func _on_visibility_changed():
 	get_tree().paused = visible
+	if is_instance_valid(viewport):
+		viewport.gui_disable_input = not visible
 
 
 func _on_gui_input(event : InputEvent):
@@ -92,3 +97,17 @@ func _on_gui_input(event : InputEvent):
 
 func _on_Close_pressed():
 	close()
+
+
+func _on_Save_pressed():
+	save_file_dialog.popup_centered()
+
+
+func _on_Save_FileDialog_visibility_changed():
+	viewport.gui_disable_input = save_file_dialog.visible
+
+
+func _on_Save_FileDialog_file_selected(path : String):
+	var img = viewport.get_texture().get_data()
+	img.flip_y()
+	return img.save_png(path)
