@@ -148,3 +148,7 @@ func _on_Spawn_evolved(spawn) -> void:
 
 func _on_Spawn_selected(spawn) -> void:
 	spawn_view.show_spawn(spawn)
+
+
+func _on_GitHub_pressed():
+	OS.shell_open("https://github.com/ClarkThyLord/Tribes-Evolved")
