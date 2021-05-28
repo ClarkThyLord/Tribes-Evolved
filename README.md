@@ -16,3 +16,13 @@
 		<img src="https://img.shields.io/badge/License-MIT-brightgreen.svg" alt="License">
 	</a>
 </p>
+
+> 2D procedural evolutionary game, made in Godot
+
+---
+
+<p align="center">
+<img src="./assets/promo/preview_one.jpg" alt="" />
+<img src="./assets/promo/preview_two.jpg" alt="" />
+<img src="./assets/promo/preview_three.jpg" alt="" />
+</p>
