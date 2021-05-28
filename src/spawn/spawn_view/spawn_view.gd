@@ -26,7 +26,11 @@ onready var evolution_progress : ProgressBar = get_node("VBoxContainer/MarginCon
 
 onready var viewport : Viewport = get_node("VBoxContainer/ColorRect/MarginContainer/ViewportContainer/Viewport")
 
+onready var lineage_scoll : ScrollContainer = get_node("VBoxContainer/ColorRect/MarginContainer/ViewportContainer/Viewport/Lineage")
+
 onready var lineage : VBoxContainer = get_node("VBoxContainer/ColorRect/MarginContainer/ViewportContainer/Viewport/Lineage/VBoxContainer")
+
+onready var save_button : Button = get_node("Save")
 
 onready var save_file_dialog : FileDialog = get_node("Save/FileDialog")
 
@@ -34,6 +38,9 @@ onready var save_file_dialog : FileDialog = get_node("Save/FileDialog")
 ## Built-In Virtual Methods
 func _ready() -> void:
 	close()
+	
+	if OS.get_name() == "HTML5":
+		save_button.visible = false
 
 
 
