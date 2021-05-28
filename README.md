@@ -22,7 +22,10 @@
 ---
 
 <p align="center">
-<img src="./assets/promo/preview_one.jpg" alt="" />
-<img src="./assets/promo/preview_two.jpg" alt="" />
-<img src="./assets/promo/preview_three.jpg" alt="" />
+	<h1> Fully procedural maps </h1>
+	<img src="./assets/promo/preview_two.jpg" alt="" />
+	<h1> Fully procedural entities and evolutions </h1>
+	<img src="./assets/promo/preview_three.jpg" alt="" />
+	<h1> Interactive world </h1>
+	<img src="./assets/promo/preview_one.jpg" alt="" />
 </p>
