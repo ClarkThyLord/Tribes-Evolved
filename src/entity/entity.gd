@@ -44,6 +44,8 @@ export(float, 16.0, 100.0) var vision := 32.0 setget set_vision
 
 export(int, 5, 64) var potential := 5 setget set_potential
 
+export(int, 1, 600) var life_span := 60
+
 export var world : NodePath setget set_world
 
 export var debug := false
@@ -76,6 +78,8 @@ onready var view_shape : CollisionShape2D = get_node("View/CollisionShape2D")
 
 onready var sprite : Sprite = get_node("Sprite")
 
+onready var particles : CPUParticles2D = get_node("CPUParticles2D")
+
 
 
 ## Built-In Virtual Methods
@@ -85,6 +89,8 @@ func _ready() -> void:
 	
 	_set_state(States.B)
 	self.world = world
+	particles.color = color
+	particles.emitting = true
 
 
 func _process(delta : float) -> void:
