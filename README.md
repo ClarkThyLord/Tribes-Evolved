@@ -17,7 +17,7 @@
 	</a>
 </p>
 
-> 2D procedural evolutionary game, made in Godot
+> 2D procedural evolutionary simulation, made in Godot
 
 ---
 
